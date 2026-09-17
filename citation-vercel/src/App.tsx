@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 
-type Page = "lookup" | "date" | "favorites" | "info";
+type Page = "lookup" | "radio" | "date" | "favorites" | "info";
 type Level = "I" | "M" | "F" | "TOW" | "U" | "I/M" | "I/J";
 
 type Citation = {
@@ -10,6 +10,92 @@ type Citation = {
   level: Level;
   title: string;
 };
+
+type RadioCode = {
+  group: "10-Codes" | "11-Codes" | "SDPD Codes" | "Disposition" | "Sheriff Terms" | "Stations" | "Scanner Statutes";
+  code: string;
+  meaning: string;
+};
+
+const RADIO_CODES: RadioCode[] = [
+  ["10-Codes","10-1","Receiving poorly"],["10-Codes","10-2","Receiving well"],["10-Codes","10-3","Change channel"],
+  ["10-Codes","10-4","Acknowledge message"],["10-Codes","10-5","Relay message"],["10-Codes","10-6","Busy"],
+  ["10-Codes","10-7","Out of service"],["10-Codes","10-8","In service"],["10-Codes","10-9","Repeat"],
+  ["10-Codes","10-10","Remain in service"],["10-Codes","10-16","Prisoner"],["10-Codes","10-17","Report routine"],
+  ["10-Codes","10-19","Return to station"],["10-Codes","10-20","Location"],["10-Codes","10-21","Phone station"],
+  ["10-Codes","10-21H","Phone home"],["10-Codes","10-22","Disregard"],["10-Codes","10-23","Stand by"],
+  ["10-Codes","10-28","Vehicle registration check"],["10-Codes","10-29","Check for wants / warrants"],
+  ["10-Codes","10-34","Are you clear?"],["10-Codes","10-35","Dangerous / armed person alert"],
+  ["10-Codes","10-36","Time check"],["10-Codes","10-41","Beginning of shift"],["10-Codes","10-42","End of shift"],
+  ["10-Codes","10-46","Assist motorist"],["10-Codes","10-53","Road blocked"],["10-Codes","10-60","Attempt to contact"],
+  ["10-Codes","10-87","Meet the officer"],["10-Codes","10-88","Request cover unit"],["10-Codes","10-89","Bomb threat"],
+  ["10-Codes","10-92","Radio check"],["10-Codes","10-97","Arrived at scene"],["10-Codes","10-98","Finished last assignment"],
+
+  ["11-Codes","11-6","Discharging firearm"],["11-Codes","11-7","Prowler"],["11-Codes","11-8","Person down"],
+  ["11-Codes","11-10","Take a report / conduct an investigation"],["11-Codes","11-12","Injured animal"],
+  ["11-Codes","11-13","Dead animal"],["11-Codes","11-14","Dog bite"],["11-Codes","11-15","Ball game in street"],
+  ["11-Codes","11-24","Abandoned vehicle"],["11-Codes","11-27","Felony record, no want"],
+  ["11-Codes","11-28","Misdemeanor record, no want"],["11-Codes","11-29","No want"],
+  ["11-Codes","11-30","Incomplete phone call"],["11-Codes","11-31","Calling for help"],
+  ["11-Codes","11-40","Notify if ambulance needed"],["11-Codes","11-41","Ambulance needed"],
+  ["11-Codes","11-42","Ambulance not needed"],["11-Codes","11-44","Coroner's case"],
+  ["11-Codes","11-45","Suicide"],["11-Codes","11-46","Death"],["11-Codes","11-47","Injured person"],
+  ["11-Codes","11-48","Provide transportation"],["11-Codes","11-49","Vehicle stop"],
+  ["11-Codes","11-50","Vehicle stop, license check"],["11-Codes","11-51","Pedestrian stop / field investigation"],
+  ["11-Codes","11-52","Status check"],["11-Codes","11-53","Security check"],
+  ["11-Codes","11-55","Hazardous / chemical spill"],["11-Codes","11-60","Water leak"],
+  ["11-Codes","11-66","Traffic lights out"],["11-Codes","11-71","Fire"],
+  ["11-Codes","11-80","Accident, serious injury"],["11-Codes","11-81","Accident, minor injury"],
+  ["11-Codes","11-82","Accident, property damage / no injury"],["11-Codes","11-83","Accident, no details"],
+  ["11-Codes","11-84","Traffic control"],["11-Codes","11-85","Tow truck"],
+  ["11-Codes","11-86","Special detail"],["11-Codes","11-88","Citizen assist"],["11-Codes","11-99","Officer needs help"],
+
+  ["SDPD Codes","Code 3","Expedite cover"],["SDPD Codes","Code 4","No further help needed"],
+  ["SDPD Codes","Code 5","Stakeout"],["SDPD Codes","Code 6","Remain clear of area (marked units)"],
+  ["SDPD Codes","Code 7","Lunch"],["SDPD Codes","Code 8","Restroom break"],
+  ["SDPD Codes","Code 10","SWAT alert"],["SDPD Codes","Code 11","SWAT staging location"],
+
+  ["Disposition","A","Arrest made"],["Disposition","K","No report required"],
+  ["Disposition","R","Report made"],["Disposition","U","Unfounded"],
+
+  ["Sheriff Terms","37F","Felony want"],["Sheriff Terms","37M","Misdemeanor want"],
+  ["Sheriff Terms","37T","Traffic want"],["Sheriff Terms","Code Blue","Bus or taxi in trouble"],
+  ["Sheriff Terms","CNA","Contacted and advised"],["Sheriff Terms","ONS","Officer Notification System"],
+  ["Sheriff Terms","Clear MO","Clear of warrants with Marshal's Office"],
+
+  ["Stations","Station A","San Diego Police"],["Stations","Station B","San Diego Lifeguard"],
+  ["Stations","Station C","Chula Vista Police / Carlsbad Police"],["Stations","Station D","San Diego Community College Police / Coronado Police"],
+  ["Stations","Station F","San Diego Fire"],["Stations","Station G","San Diego District Attorney's Office"],
+  ["Stations","Station H","Escondido Police"],["Stations","Station K","El Cajon Police / San Diego City School Police"],
+  ["Stations","Station L","San Diego Sheriff Court Services"],
+
+  ["Scanner Statutes","PC 148","Resisting arrest"],["Scanner Statutes","PC 187","Homicide"],
+  ["Scanner Statutes","PC 192","Manslaughter"],["Scanner Statutes","PC 206","Torture"],
+  ["Scanner Statutes","PC 207","Kidnapping"],["Scanner Statutes","PC 211","Robbery"],
+  ["Scanner Statutes","PC 215","Carjacking"],["Scanner Statutes","PC 240","Assault"],
+  ["Scanner Statutes","PC 242","Battery"],["Scanner Statutes","PC 245","Assault with a deadly weapon"],
+  ["Scanner Statutes","PC 246","Shooting at a dwelling"],["Scanner Statutes","PC 273.5","Domestic violence with injury"],
+  ["Scanner Statutes","PC 288","Sex crimes against a minor"],["Scanner Statutes","PC 314","Indecent exposure"],
+  ["Scanner Statutes","PC 374","Dumping"],["Scanner Statutes","PC 415","Disturbing the peace"],
+  ["Scanner Statutes","PC 417","Displaying a weapon"],["Scanner Statutes","PC 422","Criminal threats"],
+  ["Scanner Statutes","PC 451","Arson"],["Scanner Statutes","PC 459","Burglary"],
+  ["Scanner Statutes","PC 470","Forgery"],["Scanner Statutes","PC 487","Grand theft"],
+  ["Scanner Statutes","PC 488","Petty theft"],["Scanner Statutes","PC 496","Possession of stolen property"],
+  ["Scanner Statutes","PC 594","Vandalism"],["Scanner Statutes","PC 597","Animal abuse"],
+  ["Scanner Statutes","PC 602","Trespassing"],["Scanner Statutes","PC 647","Disorderly conduct"],
+  ["Scanner Statutes","CVC 4000(a)","Unregistered vehicle"],["Scanner Statutes","CVC 10851","Stolen vehicle"],
+  ["Scanner Statutes","CVC 12500","Driving without a license"],["Scanner Statutes","CVC 14601","Driving with suspended license"],
+  ["Scanner Statutes","CVC 20001","Hit and run involving injury"],["Scanner Statutes","CVC 20002","Hit and run, property damage"],
+  ["Scanner Statutes","CVC 21650","Wrong side of road"],["Scanner Statutes","CVC 22350","Unsafe speed for conditions"],
+  ["Scanner Statutes","CVC 22450","Failure to stop at stop sign"],["Scanner Statutes","CVC 22500","Illegal parking"],
+  ["Scanner Statutes","CVC 23103","Reckless driving"],["Scanner Statutes","CVC 23152","Driving under the influence"],
+  ["Scanner Statutes","H&S 11350","Possession of a controlled narcotic"],["Scanner Statutes","H&S 11377","Possession of a controlled substance"],
+  ["Scanner Statutes","W&I 5150","Danger to self or others (mental health hold reference)"]
+].map(([group, code, meaning]) => ({ group: group as RadioCode["group"], code, meaning }));
+
+const RADIO_GROUPS: Array<"All" | RadioCode["group"]> = [
+  "All", "10-Codes", "11-Codes", "SDPD Codes", "Disposition", "Sheriff Terms", "Stations", "Scanner Statutes"
+];
 
 type AppearanceResult = {
   issued: Date;
@@ -704,6 +790,84 @@ function CitationDetails({ item, onClose }: { item: Citation; onClose: () => voi
   );
 }
 
+function RadioCodesReference() {
+  const [radioQuery, setRadioQuery] = useState("");
+  const [radioGroup, setRadioGroup] = useState<(typeof RADIO_GROUPS)[number]>("All");
+
+  const rows = useMemo(() => {
+    const q = radioQuery.trim().toLowerCase();
+    return RADIO_CODES.filter((item) =>
+      (radioGroup === "All" || item.group === radioGroup) &&
+      (!q || `${item.code} ${item.meaning} ${item.group}`.toLowerCase().includes(q))
+    );
+  }, [radioQuery, radioGroup]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<RadioCode["group"], RadioCode[]>();
+    rows.forEach((item) => map.set(item.group, [...(map.get(item.group) || []), item]));
+    return map;
+  }, [rows]);
+
+  return (
+    <section className="space-y-4">
+      <div className="rounded-2xl bg-white p-5 shadow-sm">
+        <h2 className="text-2xl font-bold">San Diego Radio Codes</h2>
+        <p className="mt-2 text-slate-700">
+          Quick-reference scanner terminology organized by type. Search a code such as 10-97, 11-99, Code 4, PC 415, or a plain-language meaning.
+        </p>
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          Scanner reference only. Radio terminology varies by agency and changes over time. The statute section is shorthand from the source list, not a substitute for the Citation Lookup or current official law.
+        </div>
+
+        <input
+          value={radioQuery}
+          onChange={(event) => setRadioQuery(event.target.value)}
+          placeholder="Search radio code or meaning"
+          className="mt-4 h-11 w-full rounded-xl border bg-white px-3"
+        />
+
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+          {RADIO_GROUPS.map((group) => (
+            <button
+              key={group}
+              type="button"
+              onClick={() => setRadioGroup(group)}
+              className={radioGroup === group
+                ? "whitespace-nowrap rounded-xl bg-slate-900 px-3 py-2 text-sm text-white"
+                : "whitespace-nowrap rounded-xl border bg-white px-3 py-2 text-sm text-slate-700"}
+            >
+              {group}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {[...grouped.entries()].map(([group, items]) => (
+        <section key={group} className="rounded-2xl bg-white p-5 shadow-sm">
+          <div className="mb-3 flex items-end justify-between gap-4">
+            <h3 className="text-xl font-bold">{group}</h3>
+            <span className="text-sm text-slate-500">{items.length} entries</span>
+          </div>
+          <div className="divide-y">
+            {items.map((item) => (
+              <div key={`${group}-${item.code}-${item.meaning}`} className="grid gap-1 py-3 sm:grid-cols-[150px_1fr] sm:gap-4">
+                <div className="font-mono font-bold text-slate-900">{item.code}</div>
+                <div className="text-slate-700">{item.meaning}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      {rows.length === 0 && (
+        <div className="rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm">
+          No matching radio code found.
+        </div>
+      )}
+    </section>
+  );
+}
+
 function DateCalculator({ issuedAt, onChange }: { issuedAt: string; onChange: (value: string) => void }) {
   const result = useMemo(() => calculateAppearance(issuedAt), [issuedAt]);
 
@@ -806,8 +970,9 @@ export default function EnforcementCitationLookup() {
             <p className="text-slate-600">Fast CVC, PC, HSC, BPC, SDMC, CCR, SDCC, UFC, and TOW lookup.</p>
           </div>
 
-          <nav className="grid grid-cols-4 gap-2">
+          <nav className="grid grid-cols-5 gap-2">
             <TabButton active={page === "lookup"} onClick={() => setPage("lookup")}>Lookup</TabButton>
+            <TabButton active={page === "radio"} onClick={() => setPage("radio")}>Radio</TabButton>
             <TabButton active={page === "date"} onClick={() => setPage("date")}>Date</TabButton>
             <TabButton active={page === "favorites"} onClick={() => setPage("favorites")}>
               Favorites{favorites.length ? ` ${favorites.length}` : ""}
@@ -846,6 +1011,8 @@ export default function EnforcementCitationLookup() {
       </header>
 
       <main className="mx-auto max-w-6xl space-y-4 p-4 pb-24">
+        {page === "radio" && <RadioCodesReference />}
+
         {page === "date" && <DateCalculator issuedAt={issuedAt} onChange={setIssuedAt} />}
 
         {page === "info" && INFO.map(([title, body]) => (

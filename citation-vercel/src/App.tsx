@@ -475,7 +475,26 @@ Vehicles|22450(a)|CVC|I|Stop Sign Failure to Stop at Limit Line
 Vehicles|141.0612(c)(10)|SDMC|I|Food Trucks Prohibited Coastal
 Vehicles|142.0510(b)|SDMC|I|Parking Spaces to be Kept Clear
 Abatement|54.0212(b)|SDMC|U|Abandoned Property Unsanitary
-Abatement|54.0212(a)|SDMC|U|Abandoned Property Sanitary`;
+Abatement|54.0212(a)|SDMC|U|Abandoned Property Sanitary
+Current SDMC - Waterways|63.0403(a)(1)|SDMC|M|Build or affix structures to trees/vegetation along waterway banks
+Current SDMC - Waterways|63.0403(a)(2)|SDMC|M|Move rocks, destroy vegetation/paths, or reconfigure waterway landscape
+Current SDMC - Waterways|63.0403(a)(3)|SDMC|M|Drive, park, or bring vehicle along waterway bank outside designated area
+Current SDMC - Waterways|63.0403(a)(4)|SDMC|M|Dig on banks of a waterway
+Current SDMC - Waterways|63.0403(a)(5)|SDMC|M|Discharge or store waste along banks or into waterway
+Current SDMC - Encampments|63.0404(a)|SDMC|M|Unauthorized camping or encampment on public property
+Current SDMC - Encampments|63.0404(b)(1)|SDMC|M|Encampment posing immediate threat or unreasonable risk to a person
+Current SDMC - Encampments|63.0404(b)(2)|SDMC|M|Encampment posing immediate threat or unreasonable risk to public health or safety
+Current SDMC - Encampments|63.0404(b)(3)|SDMC|M|Encampment disrupting vital government services
+Current SDMC - Encampments|63.0404(c)(3)|SDMC|M|Camping prohibited in open space, waterway, or waterway banks
+Current SDMC - Encampments|63.0404(c)(5)|SDMC|M|Camping in designated high-risk park where required signs are posted
+Current SDMC - Enforcement Notes|63.0405(b)|SDMC|U|Enforcement limitation for 63.0404(a): shelter availability and 9:00 PM-5:30 AM restriction
+Current SDMC - Enforcement Notes|63.0405(c)|SDMC|U|63.0403 and 63.0404(b)/(c) enforceable regardless of shelter availability
+Current SDMC - Water Safety|63.20.3(a)|SDMC|U|Entering or operating on water contrary to posted warning signals, except rescue
+Current SDMC - Water Safety|63.20.3(b)|SDMC|U|Vessel or board in marked swimming area or over 5 MPH within 100 feet
+Current SDMC - Recreation Facilities|63.03|SDMC|U|Use recreation facility without required permit, ticket, or fee
+Current SDMC - Fire / WUI|511.0307(a)|SDMC|U|Park fires must comply with SDMC 63.0102(c)(11)
+Current SDMC - Fire / WUI|511.0307(c)|SDMC|U|Open burning prohibited during Red Flag Warning or Fire Weather Watch, subject to beach exception
+`;
 
 const FULL_TEXT: Record<string, string> = {
   "CVC 31": "No person shall give false information to a peace officer while the officer is performing duties under the Vehicle Code.",
@@ -490,12 +509,31 @@ const FULL_TEXT: Record<string, string> = {
   "CVC 23152(a)": "It is unlawful for a person under the influence of alcohol or drugs to drive a vehicle.",
   "SDMC 63.0108": "City of San Diego Park Rangers are authorized to enforce designated San Diego Municipal Code and California State Code violations in parks.",
   "PC 148(a)(1)": "A person shall not willfully resist, delay, or obstruct a peace officer in the discharge of duty.",
-  "PC 242": "Battery is any willful and unlawful use of force or violence upon another person."
+  "PC 242": "Battery is any willful and unlawful use of force or violence upon another person.",
+
+  "SDMC 63.0403(a)(1)": "Current City code prohibits building or erecting structures along waterway banks, driving objects into trees or natural vegetation to build an encampment or structure, or affixing objects to trees or natural vegetation.",
+  "SDMC 63.0403(a)(2)": "Current City code prohibits moving boulders or large rocks, destroying vegetation or City-created paths, or otherwise reconfiguring the natural landscape in or along a waterway.",
+  "SDMC 63.0403(a)(3)": "Current City code prohibits driving, parking, or bringing a vehicle along waterway banks except in areas specifically provided and designated for vehicular use.",
+  "SDMC 63.0403(a)(4)": "Current City code prohibits digging on the banks of a waterway.",
+  "SDMC 63.0403(a)(5)": "Current City code prohibits discharging or storing waste, including garbage, refuse, and human or animal waste, along waterway banks or into the water.",
+  "SDMC 63.0404(a)": "Current City code prohibits camping or maintaining an encampment on public property unless specifically authorized by the City Manager. Enforcement under this subsection is subject to section 63.0405(b).",
+  "SDMC 63.0404(b)(1)": "Camping or maintaining an encampment is prohibited when it poses an immediate threat or unreasonable risk of harm to a person.",
+  "SDMC 63.0404(b)(2)": "Camping or maintaining an encampment is prohibited when it poses an immediate threat or unreasonable risk of harm to public health or safety.",
+  "SDMC 63.0404(b)(3)": "Camping or maintaining an encampment is prohibited when it disrupts vital government services.",
+  "SDMC 63.0404(c)(3)": "Camping or maintaining an encampment is prohibited at all times in open space, waterways, and the banks of waterways.",
+  "SDMC 63.0404(c)(5)": "Camping or maintaining an encampment is prohibited in a park that the City Manager has determined presents a substantial public health and safety risk when the required signs are posted.",
+  "SDMC 63.0405(b)": "For section 63.0404(a), officers shall not issue a criminal citation between 9:00 p.m. and 5:30 a.m. or when no reasonably available shelter exists for the person, considering disability and other specific circumstances.",
+  "SDMC 63.0405(c)": "Sections 63.0403 and 63.0404(b) and (c) are enforceable at all times regardless of shelter availability.",
+  "SDMC 63.20.3(a)": "It is unlawful to bathe, swim, surf, row, canoe, or operate specified watercraft where warning signals have been placed on the water or adjacent beach, except for rescue.",
+  "SDMC 63.20.3(b)": "It is unlawful to operate a vessel, windsurfer, sailboard, or similar device in a marked swimming area, or within 100 feet of it at more than five miles per hour.",
+  "SDMC 63.03": "It is unlawful to use a municipal recreation facility for which a fee, ticket, or permit has been established without first obtaining the required authorization or paying the required fee.",
+  "SDMC 511.0307(a)": "The current San Diego Fire Code provides that fires are not permitted in public parks except as allowed by SDMC section 63.0102(c)(11).",
+  "SDMC 511.0307(c)": "The current San Diego Fire Code prohibits open burning, recreational fires, and portable outdoor fireplace fires during a Red Flag Warning or Fire Weather Watch, subject to the specified beach-area exception.",
 };
 
 const INFO: Array<[string, string]> = [
   ["About", "Fast field reference for CVC, PC, HSC, BPC, SDMC, CCR, SDCC, UFC, and TOW entries."],
-  ["Features", "Search by section, code, title, level, or category. The date page calculates an appearance date 8 weeks out and moves it to the next court day when needed."],
+  ["Features", "Search by section, code, title, level, or category. Current SDMC park, waterway, encampment, water-safety, and fire-reference entries include links to the City's EncodePlus code portal. The date page calculates an appearance date 8 weeks out and moves it to the next court day when needed."],
   ["Disclaimer", "For quick reference only. Verify current law, agency policy, court rules, and training before field use."]
 ];
 
@@ -517,6 +555,15 @@ const LEVEL_CLASS: Record<Level, string> = {
   U: "bg-slate-100 text-slate-800",
   "I/M": "bg-indigo-100 text-indigo-800",
   "I/J": "bg-green-100 text-green-800"
+};
+
+const LOCAL_SOURCE_URLS: Record<string, string> = {
+  "63.0403": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?tocid=002.006.003.006",
+  "63.0404": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?tocid=002.006.003.006",
+  "63.0405": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?tocid=002.006.003.006",
+  "63.20.3": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5063",
+  "63.03": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5052",
+  "511.0307": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=2932"
 };
 
 const STATE_LAW_CODES: Record<string, string> = {
@@ -568,8 +615,14 @@ const citationKey = (item: Citation) => `${item.section}|${item.code}|${item.tit
 const citationLine = (item: Citation) => `${item.section} ${item.code} [${item.level}] - ${item.title}`;
 
 function officialUrl(item: Citation): string {
+  if (item.code === "SDMC") {
+    const baseSection = item.section.match(/^\d+(?:\.\d+)*/)?.[0] || item.section;
+    return LOCAL_SOURCE_URLS[baseSection] || "https://online.encodeplus.com/regs/sandiego-ca/index.aspx";
+  }
+
   const lawCode = STATE_LAW_CODES[item.code];
   if (!lawCode) return "";
+
   const section = item.section.replace(/\(.*/, "");
   return `https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=${lawCode}&sectionNum=${section}`;
 }

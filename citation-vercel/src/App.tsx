@@ -105,436 +105,435 @@ type AppearanceResult = {
   issuedDuringCourtHours: boolean;
 };
 
-const DATA = `General Provisions / Admin|31|CVC|M|False Information
-General Provisions / Admin|2800(a)|CVC|M|Fail to obey Lawful Order
-General Provisions / Admin|2800.1(a)|CVC|M|Evading Peace Officer (marked veh)
-General Provisions / Admin|2800.1(b)|CVC|M|Evading Peace Officer (marked bicycle)
-General Provisions / Admin|2800.2|CVC|F|Evade: Reckless Driving
-General Provisions / Admin|2818|CVC|I|Flare or Cone Pattern: Traverse
-Registration Of Vehicles|4000(a)(1)|CVC|I|Unregistered Vehicle
-Registration Of Vehicles|4159|CVC|I|Notify DMV Address Change (10 days)
-Registration Of Vehicles|4160|CVC|I|Address Change on Registration in ink (10 days)
-Registration Of Vehicles|4454(a)|CVC|I|Registration: not in veh (CA registered)
-Registration Of Vehicles|4462(a)|CVC|I|Registration: not in veh (out of state)
-Registration Of Vehicles|4462(b)|CVC|I|Display/Present/Use Wrong reg/tab/plate
-Registration Of Vehicles|4462.5|CVC|M|Above: w/intent to avoid Registration Fees
-Registration Of Vehicles|4463(a)(1)|CVC|F|Counterfeit Reg/tab/plate
-Registration Of Vehicles|4464|CVC|I|Altered License Plate
-Registration Of Vehicles|5200|CVC|I|License Plates: 2 attached front/rear
-Registration Of Vehicles|5201|CVC|I|License Plates: Securely Mounted: rear 12-16 in, front under 60 in
-Registration Of Vehicles|5201(f)|CVC|I|License Plates: Covered
-Registration Of Vehicles|5201(g)|CVC|I|License Plates: Obscured
-Registration Of Vehicles|5204|CVC|I|Expired Registration Tabs
-Drivers License|12500(a)|CVC|M|Unlicensed Driver
-Drivers License|12500(b)|CVC|I|Motorcycle: M1 or M2 License Required
-Drivers License|12511|CVC|I|No more than one DL
-Drivers License|12509.5(c)|CVC|I|Motorcycle Instruction Permit Restrictions
-Drivers License|12814.6(a)(1)|CVC|I|Failure to obey instructional permit restrictions
-Drivers License|12814.6(b)(1)|CVC|I|Failure to obey Provisional License restrictions
-Drivers License|12815(a)|CVC|I|DL Mutilated
-Drivers License|12951(a)|CVC|I|DL not in possession
-Drivers License|12951(b)|CVC|M|Refuse to Present DL
-Drivers License|14600(a)|CVC|I|Change of Address
-Drivers License|14601(a)|CVC|M|Suspended or Revoked: Reckless
-Drivers License|14601.1(a)|CVC|M|Suspended or Revoked: Not Driving Related
-Drivers License|14601.2(a)|CVC|M|Suspended or Revoked: DUI
-Drivers License|14603|CVC|I|Disobey License Restrictions
-Drivers License|14610(a)(3)|CVC|M|Display Another Person's Driver License
-Drivers License|14610(a)(8)|CVC|M|Alter Driver License
-Financial Responsibility Laws|16028(a)|CVC|I|Proof of Insurance
-Bicycle Operation|21201(d)(1)|CVC|I|Bike Light Visible 300 feet
-Bicycle Operation|21203|CVC|I|Hitching a Ride
-Bicycle Operation|21212|CVC|I|Bicycle Helmet under 18
-Bicycle Operation|21650.1|CVC|I|Riding against traffic
-Bicycle Operation|21210|CVC|I|Bike blocking sidewalk
-Bicycle Operation|21205|CVC|I|At least one hand on handlebars
-Bicycle Operation|21201(a)|CVC|I|Brake Required
-Bicycle Operation|21204(a)|CVC|I|Rider must ride on permanent attached seat
-Bicycle Operation|21204(b)|CVC|I|Passenger on bicycle other than seat
-Signals & Markings|21453(a)|CVC|I|Red Light
-Signals & Markings|21453(b)|CVC|I|Yield Before Right Turn on Red
-Signals & Markings|21453(c)|CVC|I|Red Arrow Signal
-Signals & Markings|22450|CVC|I|Stop Sign
-Signals & Markings|21453(d)|CVC|I|Pedestrian Cross Against Red
-Signals & Markings|21457(a)|CVC|I|Flashing Red Signal
-Signals & Markings|21460(a)|CVC|I|Double Solid Lines
-Signals & Markings|21461(a)|CVC|I|Disobeying Signs
-Driving, Overtaking & Passing|21650|CVC|I|Driving: Wrong Side of Roadway
-Driving, Overtaking & Passing|21651(a)(1)|CVC|I|Divided Highway Island On, Over, or Across
-Driving, Overtaking & Passing|21651(a)(2)|CVC|I|Divided Highway Turn Across
-Driving, Overtaking & Passing|21651(b)|CVC|M|Wrong Way on Divided Highway
-Driving, Overtaking & Passing|21655.5|CVC|I|Carpool Lanes
-Driving, Overtaking & Passing|21657|CVC|I|Wrong Way
-Driving, Overtaking & Passing|21658(a)|CVC|I|Unsafe Lane Change or Straddling
-Driving, Overtaking & Passing|21663|CVC|I|Driving on Sidewalk
-Driving, Overtaking & Passing|21703|CVC|I|Following Too Closely
-Driving, Overtaking & Passing|21706|CVC|I|Follow Emergency Vehicle Within 300 Feet
-Driving, Overtaking & Passing|21708|CVC|I|Drive Over Fire Hose
-Driving, Overtaking & Passing|21755(a)|CVC|I|Passing on Right When Unlawful
-Right Of Way|21800(a)|CVC|I|Uncontrolled Intersection
-Right Of Way|21800(c)|CVC|I|4 Way Stop
-Right Of Way|21802(a)|CVC|I|Enter from a Stop Sign
-Right Of Way|21803(a)|CVC|I|Yield Sign
-Right Of Way|21804(a)|CVC|I|Enter or Cross a Highway
-Right Of Way|21806(a)(1)|CVC|I|Yield to Code-3 Emergency Vehicle
-Right Of Way|21950(a)|CVC|I|Pedestrian in Crosswalk: Driver Yield
-Turning, Starting & Signaling|22100(a)|CVC|I|Right Turn from Right Side
-Turning, Starting & Signaling|22100(b)|CVC|I|Left Turn from Left Side
-Turning, Starting & Signaling|22100.1|CVC|I|U-Turn from Far Left Lane
-Turning, Starting & Signaling|22101(d)|CVC|I|Turns Required or Prohibited by Sign
-Turning, Starting & Signaling|22102|CVC|I|U Turn Business District
-Turning, Starting & Signaling|22103|CVC|I|U Turn Residence District
-Turning, Starting & Signaling|22104|CVC|I|U Turn Fire Station
-Turning, Starting & Signaling|22106|CVC|I|Unsafe Backing or Starting
-Turning, Starting & Signaling|22107|CVC|I|Unsafe Turn or Failure to Signal
-Turning, Starting & Signaling|22108|CVC|I|Turn Signal Required 100 Feet Before Turn
-Speed Laws|22348(b)|CVC|I|Excessive Speed Over 100 MPH
-Speed Laws|22349(a)|CVC|I|Max Speed 65 MPH
-Speed Laws|22350|CVC|I|Unsafe Speed
-Speed Laws|22400(a)|CVC|I|Minimum Speed or Impede Traffic
-Speed Laws|22405(a)|CVC|I|Speed on Bridge
-Speed Laws|22411|CVC|I|Scooter 15 MPH Max
-Speed Laws|22526(a)|CVC|I|Gridlock Driving Straight
-Speed Laws|22526(b)|CVC|I|Gridlock Turning Without Room
-Public Offenses|23103(a)|CVC|M|Reckless Driving Highway
-Public Offenses|23103(b)|CVC|M|Reckless Driving Parking Lot
-Public Offenses|23109(a)|CVC|M|Speed Contest
-Public Offenses|23109(b)|CVC|M|Aid or Abet Speed Contest
-Public Offenses|23109(c)|CVC|M|Exhibition of Speed
-Public Offenses|23110(a)|CVC|M|Throw Substance at Vehicle
-Public Offenses|23110(b)|CVC|F|Throw Substance at Vehicle with Intent to Cause GBI
-Public Offenses|23116(a) or (b)|CVC|I|Passenger in Bed of Pick Up
-Public Offenses|23111|CVC|I|Throw Cigarette or Burning Item
-Public Offenses|23112(a)|CVC|I|Litter on Highway
-Public Offenses|23117(a)|CVC|I|Untethered Animal in Truck Bed
-Scooters|21223(a)(1)|CVC|I|Front Light Required
-Scooters|21228(a)|CVC|I|Too Slow or Not Riding on Right
-Scooters|21229(a)|CVC|I|Required to Ride in Marked Bike Lane
-Scooters|21229(b)|CVC|I|Unsafe Lane Change or Fail to Signal
-Scooters|21235(b)|CVC|I|Helmet Required
-Scooters|21235(d)|CVC|I|Operate Under 16 Years Old
-Scooters|21235(g)|CVC|I|Ride on Sidewalk
-Alcohol/Tobacco Violations|21200.5|CVC|M|DUI on a Bike
-Alcohol/Tobacco Violations|21221.5|CVC|M|DUI Scooter BAC .08 or Greater
-Alcohol/Tobacco Violations|23136(a)|CVC|I|Under 21 BAC .01 or Greater
-Alcohol/Tobacco Violations|23140|CVC|I|DUI Under 21 BAC .05 or Greater
-Alcohol/Tobacco Violations|23152(a)|CVC|M|DUI Driving Under the Influence
-Alcohol/Tobacco Violations|23152(b)|CVC|M|DUI BAC .08 or Greater
-Alcohol/Tobacco Violations|23153|CVC|F|DUI with Injury
-Alcohol/Tobacco Violations|23154(a)|CVC|M|DUI Probationer BAC .01 or Greater
-Alcohol/Tobacco Violations|23220|CVC|I|Drive While Drinking
-Alcohol/Tobacco Violations|23221|CVC|I|Drinking in Vehicle Upon Highway
-Alcohol/Tobacco Violations|23222(a)|CVC|I|Open Container Driver While Driving
-Alcohol/Tobacco Violations|23223(a)|CVC|I|Open Container Driver Parked
-Alcohol/Tobacco Violations|23223(b)|CVC|I|Open Container Passenger
-Alcohol/Tobacco Violations|23222(b)|CVC|M|Marijuana in Vehicle Less Than 28.5g
-Alcohol/Tobacco Violations|23224(a)|CVC|I|Driver Under 21 Transport Alcohol
-Alcohol/Tobacco Violations|23224(b)|CVC|I|Passenger Under 21 Possess Alcohol
-Alcohol/Tobacco Violations|308(b)|PC|I|Minor 16-18 Possess Tobacco
-Cell Phone/Texting/GPS/Sunglasses|23123(a)|CVC|I|Cell Phone Use While Driving
-Cell Phone/Texting/GPS/Sunglasses|23123.5(a)|CVC|I|Texting While Driving
-Cell Phone/Texting/GPS/Sunglasses|23124(b)|CVC|I|Under 18 Use Cell Phone
-Cell Phone/Texting/GPS/Sunglasses|26708(2)|CVC|I|View Obstructed by Object or Material
-Cell Phone/Texting/GPS/Sunglasses|23120|CVC|I|Operate Vehicle with Wide Temple Glasses
-Equipment Violations|24250|CVC|I|Drive Without Required Lights During Darkness
-Equipment Violations|24252(a)|CVC|I|Lighting Devices in Good Working Order
-Equipment Violations|24400|CVC|I|Headlamps Required
-Equipment Violations|24403|CVC|I|Fog Lamps Not in Place of Headlamps
-Equipment Violations|24405(a)|CVC|I|Forward Lamps Not to Exceed 4
-Equipment Violations|24409(a)|CVC|I|Failure to Dim High Beams Oncoming
-Equipment Violations|24409(b)|CVC|I|Failure to Dim High Beams Following
-Equipment Violations|24600|CVC|I|Tail Lamps Required
-Equipment Violations|24601|CVC|I|License Plate Light Required
-Equipment Violations|24603(b)|CVC|I|Stop Lamps Required
-Equipment Violations|24606(c)|CVC|I|Backup Lamps Used Other Than Backing
-Equipment Violations|24951(b)(1)|CVC|I|Turn Signals Required Front and Rear
-Equipment Violations|25400(a)|CVC|I|Improper Lights to Front
-Equipment Violations|25400(b)|CVC|I|Modified Lights or Equipment Color
-Equipment Violations|26101(b)|CVC|I|Modify Lights or Equipment Color
-Equipment Violations|26707|CVC|I|Windshield Wipers
-Equipment Violations|26708(a)(1)|CVC|I|Window Obstructed
-Equipment Violations|26708(b)|CVC|I|View Obstructed
-Equipment Violations|26708.5|CVC|I|Window Tint
-Equipment Violations|26709(a)|CVC|I|Rear View Mirror Required
-Equipment Violations|26709(b)|CVC|I|Side View Mirrors Required
-Equipment Violations|26710|CVC|I|Defective Windshield
-Equipment Violations|27000|CVC|I|Horn Required
-Equipment Violations|27007|CVC|I|Loud Stereo Greater Than 50 Feet
-Equipment Violations|27150(a)|CVC|I|Muffler Defective or Excessive Noise
-Equipment Violations|27155|CVC|I|Gas Cap Required
-Equipment Violations|27315(d)|CVC|I|Seatbelt Required Driver
-Equipment Violations|27315(e)|CVC|I|Seatbelt Required Passenger
-Equipment Violations|27360(a)|CVC|I|Child Seat Parent
-Equipment Violations|27360(b)|CVC|I|Child Seat Driver
-Equipment Violations|27400|CVC|I|Headset or Earplugs Cover Both Ears
-Equipment Violations|27465(b)|CVC|I|Bald Tires
-Equipment Violations|27600|CVC|I|Fenders or Mudguards Required
-Equipment Violations|28701|CVC|I|Bumpers Required
-Equipment Violations|27803(b)|CVC|I|Motorcycle Helmet Required
-Storage & Impound|22651(a)|CVC|TOW|Unattended on Bridge
-Storage & Impound|22651(b)|CVC|TOW|Blocks Highway
-Storage & Impound|22651(c)|CVC|TOW|Stolen or Embezzled
-Storage & Impound|22651(d)|CVC|TOW|Blocking Driveway
-Storage & Impound|22651(e)|CVC|TOW|Blocking Fire Hydrant
-Storage & Impound|22651(h)(1)|CVC|TOW|Driver Arrested
-Storage & Impound|22651(h)(2)|CVC|TOW|Alcohol Screen Test Driver Under 21
-Storage & Impound|22651(i)(1)|CVC|TOW|5 or More Parking Violations
-Storage & Impound|22651(k)|CVC|TOW|72 Hour Violation
-Storage & Impound|22651(n)|CVC|TOW|Posted Signs
-Storage & Impound|22651(o)(1)|CVC|TOW|Expired Registration 6 Months
-Storage & Impound|22651(o)(2)|CVC|TOW|Expired Registration Off Street
-Storage & Impound|22651(p)|CVC|TOW|12500 and 14601 Violations
-Storage & Impound|22651.5(a)|CVC|TOW|Alarm or Horn 45 Minutes
-Storage & Impound|22669(a)|CVC|TOW|Abandoned Vehicle
-Storage & Impound|22669(b)|CVC|TOW|Vehicle Public Hazard
-Storage & Impound|22655(a)|CVC|TOW|Involved in Hit and Run
-Storage & Impound|22655.5|CVC|TOW|Impound for Investigation
-Fireworks|12676|HSC|M|Fireworks Unlawful Sales
-Fireworks|12677|HSC|M|Fireworks Possession
-Fireworks|12680|HSC|M|Fireworks Unlawful Discharge
-Fireworks|78.1028|UFC|M|Fireworks Possess, Use, Explode, Store, or Sell
-Minor In Possession BPC|25661|BPC|I|Possess False ID by Minor
-Minor In Possession BPC|25662(a)|BPC|M|Minor Possess Alcohol in Public
-Minor In Possession BPC|25668(a)|BPC|M|Minor Sell or Furnish Alcohol to Under 21
-Minor In Possession BPC|25668(b)|BPC|M|Minor Buy or Consume Alcohol
-Minor In Possession BPC|25668(c)|BPC|M|Purchase or Furnish Alcohol to Minor
-Minor In Possession BPC|25668(d)|BPC|M|Allow Minor to Consume Alcohol in Bar
-Domestic Violence Laws PC|136.1|PC|F|DV Dissuading Witness or Victim
-Domestic Violence Laws PC|236|PC|F|DV False Imprisonment
-Domestic Violence Laws PC|243(e)(1)|PC|F|DV Battery
-Domestic Violence Laws PC|273.5|PC|F|DV Injury to Spouse or Cohabitant
-Domestic Violence Laws PC|591|PC|F|DV Injury to Phone Line
-Domestic Violence Laws PC|646.9(a)|PC|F|DV Stalking
-Domestic Violence Laws PC|646.9(b)|PC|F|DV Stalking with TRO
-Domestic Violence Laws PC|13730|PC|F|DV Incident Report
-Penal Code Sections PC|166(a)(4)|PC|M|Court Order Violation Criminal
-Penal Code Sections PC|215(a)|PC|F|Carjacking
-Penal Code Sections PC|245(a)(1)|PC|F|ADW or GBI Other Than Firearm
-Penal Code Sections PC|245(a)(2)|PC|F|ADW Firearm
-Penal Code Sections PC|273.6|PC|M|Court Order Civil DV or EPO
-Penal Code Sections PC|243(a)|PC|M|Battery
-Penal Code Sections PC|374.3(a)|PC|I|Urinating in Public or Waste Matter
-Penal Code Sections PC|374.4|PC|I|Littering
-Penal Code Sections PC|140|PC|F|Threatening Witness
-Penal Code Sections PC|148(a)(1)|PC|M|Resist Delay Obstruct
-Penal Code Sections PC|148.5|PC|M|False Police Report
-Penal Code Sections PC|148.9(a)|PC|M|False Identity to Officer
-Penal Code Sections PC|422|PC|M|Criminal Threats
-Penal Code Sections PC|314|PC|U|Lewd or Obscene Acts
-Penal Code Sections PC|370|PC|M|Public Nuisance
-Penal Code Sections PC|451|PC|F|Arson
-Penal Code Sections PC|466|PC|M|Burglary Tools
-Penal Code Sections PC|470|PC|F|Forgery
-Penal Code Sections PC|485|PC|F|Misappropriation of Found Property
-Penal Code Sections PC|487|PC|F|Grand Theft Over 950
-Penal Code Sections PC|488|PC|M|Petty Theft Under 950
-Penal Code Sections PC|3056|PC|U|Parole Violation Hold
-Weapons|21510|PC|M|Switchblade
-Weapons|25400(a)|PC|M|Concealed Firearm
-Weapons|25850(a)|PC|M|Loaded Firearm Open Carry
-Weapons|Various|PC|F|Possession of Weapon
-Drugs Cocaine Codeine Heroin Morphine Mescaline Methadone Percodan Peyote Quaalude|11350|HSC|F|Drugs Possession
-Drugs Cocaine Codeine Heroin Morphine Mescaline Methadone Percodan Peyote Quaalude|11351|HSC|F|Drugs Possession for Sales
-Drugs Cocaine Codeine Heroin Morphine Mescaline Methadone Percodan Peyote Quaalude|11352|HSC|F|Drugs Sell Furnish Give Transport
-Drugs Cocaine Codeine Heroin Morphine Mescaline Methadone Percodan Peyote Quaalude|11368|HSC|F|Forged or Altered Prescription
-Drugs Marijuana Pot Hash|11357(a)|HSC|F|Drugs Possession More Than 28.5g
-Drugs Marijuana Pot Hash|11357(b)|HSC|F|Drugs Possession Less Than 28.5g
-Drugs Marijuana Pot Hash|11359|HSC|F|Drugs Possession for Sales
-Drugs Marijuana Pot Hash|11360(a)|HSC|F|Drugs Sell or Furnish
-Drugs Marijuana Pot Hash|11361|HSC|F|Drugs Use of or Sales to Minor
-Drugs Marijuana Pot Hash|11358|HSC|F|Drugs Cultivate Harvest Process
-Drugs Methamphetamine Barbiturates Hallucinogens Steroids LSD PCP Ritalin|11377|HSC|U|Possession
-Drugs Methamphetamine Barbiturates Hallucinogens Steroids LSD PCP Ritalin|11378|HSC|F|Drugs Possession for Sales
-Drugs Methamphetamine Barbiturates Hallucinogens Steroids LSD PCP Ritalin|11379(a)|HSC|F|Drugs Sell Furnish Give Transport
-Drugs Methamphetamine Barbiturates Hallucinogens Steroids LSD PCP Ritalin|11380|HSC|F|Drugs Use of or Sales to Minor
-Drugs Other|11357|HSC|F|Under the Influence of Controlled Substance
-Drugs Other|11391|HSC|F|Mushrooms Transport or Sell
-Drugs Other|11364|HSC|M|Possession of Paraphernalia
-Drugs Other|4140|BPC|M|Possess Hypodermic Needle
-Drugs Other|4060|BPC|M|Possess Prescription Drug Without Prescription
-Parking Violations CVC|5200|CVC|I|License Plates Missing Parked
-Parking Violations CVC|5204|CVC|I|Expired Tags Parked
-Parking Violations CVC|22500(a)|CVC|I|Parking in Intersection
-Parking Violations CVC|22500(b)|CVC|I|Parking in Crosswalk
-Parking Violations CVC|22500(c)|CVC|I|Parked Red Curb or Safety Zone
-Parking Violations CVC|22500(d)|CVC|I|Parked Within 15 Feet of Fire Department Driveway
-Parking Violations CVC|22500(e)(1)|CVC|I|Parked Blocking Driveway
-Parking Violations CVC|22500(f)|CVC|I|Parking on or Across Sidewalk
-Parking Violations CVC|22500(h)|CVC|I|Double Parking
-Parking Violations CVC|22500(i)|CVC|I|Parking in Bus Loading Zone
-Parking Violations CVC|22500.1|CVC|I|Stop Stand Park in Fire Lane
-Parking Violations CVC|22502a|CVC|I|Parked Wrong Side or Over 18 Inches from Curb
-Parking Violations CVC|22505b|CVC|I|Parked on Posted Highway
-Parking Violations CVC|22514|CVC|I|Parked Within 15 Feet of Hydrant
-Parking Violations CVC|22507.8a|CVC|I|Disabled Parking Space
-Parking Violations CVC|22507.8c|CVC|I|Park on Disabled Space Crosshatch
-Parking Violations CVC|22522|CVC|I|Parked Within 3 Feet of Access Ramp
-Environmental|62.0606|SDMC|I|Attaching Rope, Wire, Etc. Detrimental Substance Prohibited
-Environmental|43.0304|SDMC|M|Illegal Discharge into Storm Drain
-Environmental|62.0604|SDMC|I|Removal of Planting Prohibited
-Airspace|52.5403|SDMC|M|Drones Careless or Reckless / FAA Restriction / Emergency Interference
-Airspace|63.0201(b)|SDMC|M|Soaring or Gliding Without Permit
-Property Crime|498(b)(5)|PC|M|Utility Theft: City Electricity Without Permission
-Property Crime|602(m)|PC|M|Trespass: Entering and Occupying Real Property or Structures
-Property Crime|602(e)|PC|M|Trespass and Remove Earth, Soil, or Stone from Park
-Property Crime|602(h)|PC|M|Trespass Fence or Gate by Opening or Destroying
-Property Crime|602(j)|PC|M|Trespass Land and Injure Property of Owner
-Property Crime|602(k)(3)|PC|M|Trespass Posted Land by Damaging or Unlocking Gate Lock
-Property Crime|63.0106(a)|SDMC|I|Skating Prohibited Balboa Park
-General Park Codes|63.0102(c)(1)|SDMC|I|Posting of Handbills Prohibited
-General Park Codes|63.0102(c)(2)|SDMC|I|Loose Animal
-General Park Codes|63.0102(c)(2)(B)|SDMC|I|Dog Leash Exceeds 8 Feet
-General Park Codes|63.0102(e)(1)|SDMC|I|Dog License Required Over 4 Months
-General Park Codes|63.0102(c)(3)|SDMC|I|Fireworks Prohibited
-General Park Codes|63.0102(c)(4)|SDMC|I|Destruction of Plants
-General Park Codes|63.0102(c)(5)|SDMC|I|Defacement of Property
-General Park Codes|63.0102(c)(6)|SDMC|I|Dumping Prohibited
-General Park Codes|63.0102(c)(7)|SDMC|I|Glass Containers Prohibited
-General Park Codes|63.0102(c)(8)|SDMC|I|Littering Prohibited
-General Park Codes|63.0102(c)(9)|SDMC|I|Park Waters
-General Park Codes|63.0102(c)(10)|SDMC|I|Mistreating Animals
-General Park Codes|63.0102(c)(11)|SDMC|I|Fires Prohibited
-General Park Codes|63.0102(c)(12)|SDMC|I|Temporary Structures Prohibited
-General Park Codes|63.0102(c)(13)|SDMC|I|Sales Prohibited
-General Park Codes|63.0102(c)(14)|SDMC|I|Commercial Activity or Service Prohibited
-General Park Codes|63.0102(c)(15)|SDMC|I|Shows Prohibited
-General Park Codes|63.0102(c)(16)|SDMC|I|Indecent Conduct or Threat
-General Park Codes|63.0102(c)(17)|SDMC|I|Sports in Designated Areas Only
-General Park Codes|63.0102(c)(18)|SDMC|I|Disobey Lawful Order or False ID
-General Park Codes|63.0102(c)(19)(1)|SDMC|I|Bicycles Prohibited
-General Park Codes|63.0102(c)(19)(4)|SDMC|I|Motorized Vehicles Prohibited
-General Park Codes|63.0102(c)(20)|SDMC|I|Speeding in Park
-General Park Codes|63.0102(c)(21)|SDMC|I|Parking in Undesignated Area
-General Park Codes|63.0102(c)(22)|SDMC|I|Car Washing Prohibited
-General Park Codes|63.0102(c)(23)|SDMC|I|Oversized Vehicular Traffic
-General Park Codes|63.0102(c)(24)|SDMC|I|Large Groups 50+ People
-General Park Codes|63.0102(c)(24)|SDMC|I|Obstructing Traffic
-General Park Codes|63.0102(c)(26)|SDMC|I|Move or Destroy Park Materials
-General Park Codes|63.1012(c)(27)|SDMC|I|Bridle Trails Equestrian Only
-General Park Codes|63.0102(c)(28)|SDMC|I|Unlawful Use of Valves or Utilities
-Public Nuisance|63.20.5(j)|SDMC|I|Household Furniture in Public Coastal
-Public Nuisance|56.55|SDMC|I/M|Urination or Defecation
-Public Nuisance|22435.2(f)|BPC|M|Shopping Cart with Placard
-Public Nuisance|54.0110|SDMC|I|Unauthorized Encroachment
-Public Nuisance|66.0402|SDMC|I/M|Unauthorized Collection of Recyclables
-Public Nuisance|64.0301(a)|SDMC|M|Discharge of Wastewater
-Public Nuisance|63.20.5(b)|SDMC|I|Refuse Receptacle Rummage
-Public Nuisance|66.0301|SDMC|I|Tampering with or Removal of Refuse
-Vandalism|594(b)(2)(a)|PC|M|Vandalism Under $950
-Vandalism|594(b)(1)|PC|F|Felony Vandalism $950 or More
-Vandalism|63.07|SDMC|I/M|Torrey Pine Trees Destruction or Injury
-Vandalism|622|PC|M|Injure, Disfigure, or Destroy Monument, Art, Shade Tree, or Ornamental Plant
-Vandalism|622.5|PC|M|Injure, Deface, or Destroy Archaeological or Historical Object
-Vandalism|594.2(a)|PC|M|Possession of Graffiti Tools with Intent
-Lewd Behavior|56.53(c)|SDMC|M|Public Nudity
-Lewd Behavior|314|PC|M|Indecent Exposure
-Lewd Behavior|647(a)|PC|M|Lewd Act in Public
-Keeping the Park Clean|44.0103|SDMC|I|Spitting Prohibited
-Keeping the Park Clean|374.7(a)|PC|M|Polluting Waterway Within 150 Feet of High Water Mark
-Minor Enforcement|56.61(a)|SDMC|I/J|Minor Consumption of Alcohol
-Minor Enforcement|25662(a)|BPC|I/J|Minor in Possession of Alcohol
-Minor Enforcement|58.04|SDMC|I/J|Minor in Possession of Tobacco
-Minor Enforcement|594.1(e)(1)|PC|I/J|Minor in Possession of Aerosol Can
-Weapons, Explosives, Fire|53.10(c)|SDMC|M|Discharge Firearms or Explosives Unauthorized
-Weapons, Explosives, Fire|63.08|SDMC|M|Discharge of Firearms Prohibited
-Weapons, Explosives, Fire|63.20.19|SDMC|I|Weapons or Firearms Prohibited
-Weapons, Explosives, Fire|13002(a)|HSC|M|Fire Ignition Source
-Dogs / Animals|63.0102(e)(2)|SDMC|I|Dog Bite Injury
-Dogs / Animals|44.0304.1|SDMC|I|Dog Defecation Not Cleaned Up
-Dogs / Animals|620(a)|SDCC|I|Dog License Required
-Dogs / Animals|251.1|CCR|M|Harassment of Animals
-Dogs / Animals|59.5.0502(c)(1)|SDMC|I|Loud Dogs in Permitted Site
-Dogs / Animals|44.0305(a)|SDMC|I|Wild Animals and Prohibited Species
-Dogs / Animals|44.0204|SDMC|I|Manure / Animal Excreta Prohibited
-Dogs / Animals|44.0305(b)(3)(A)|SDMC|I|Boa or Snake Must Be in Cage
-Dogs / Animals|62.0605|SDMC|I|Fastening Animals to Trees or Other Objects
-Noise|59.5.0502(b)(1)|SDMC|M|Amplification
-Noise|59.5.0502(f)|SDMC|I|Excessive Sound Over 65dB at 10 Feet
-Drugs & Alcohol|25620(a)|BPC|I|No Alcohol in Undesignated Area
-Drugs & Alcohol|56.56(a)|SDMC|I|Open Container of Alcohol
-Drugs & Alcohol|56.54(b)|SDMC|I/M|Consumption of Alcohol
-Drugs & Alcohol|23223(a)|CVC|I|Possess Alcohol in Vehicle Driver
-Drugs & Alcohol|23224(a)|CVC|I|Possess Alcohol in Vehicle Under 21
-Drugs & Alcohol|43.1002(g)|SDMC|I|Smoking or Vaping
-Drugs & Alcohol|42.1303|SDMC|I|Smoking or Vaping Marijuana
-Drugs & Alcohol|11364|HSC|M|Drug Paraphernalia
-Drugs & Alcohol|4140|BPC|M|Syringe
-Park Ranger|148(a)|PC|M|Obstruct or Delay
-Park Ranger|52.05|SDMC|M|Furnish False Information to Peace Officer
-Park Ranger|63.20.13|SDMC|I|Rules to be Followed / Posting
-Park Ranger|62.0612|SDMC|I/M|Interference with Employee Prohibited
-Vehicles|23127|CVC|M|Off-Roading Prohibited Where Clearly Marked
-Vehicles|2146(a)|CVC|I|Disobey Official Traffic Sign Wrong Way
-Vehicles|38319|CVC|I/M|Damage Environment While Operating Off-Highway Vehicle
-Vehicles|23103(b)|CVC|M|Reckless Driving in Parking Area
-Vehicles|38301|CVC|I|Operating Vehicle on Lands Not Authorized
-Vehicles|21207.5(a)|CVC|I|Class 3 Bikes Prohibited on Trail
-Vehicles|86.0137(b)|SDMC|I|Repair Vehicle Prohibited
-Vehicles|38320(a)|CVC|I|Littering from Vehicle Likely to Injure Animal or Plant
-Vehicles|22450(a)|CVC|I|Stop Sign Failure to Stop at Limit Line
-Vehicles|141.0612(c)(10)|SDMC|I|Food Trucks Prohibited Coastal
-Vehicles|142.0510(b)|SDMC|I|Parking Spaces to be Kept Clear
-Abatement|54.0212(b)|SDMC|U|Abandoned Property Unsanitary
-Abatement|54.0212(a)|SDMC|U|Abandoned Property Sanitary
-Current SDMC - Waterways|63.0403(a)(1)|SDMC|M|Build or affix structures to trees/vegetation along waterway banks
-Current SDMC - Waterways|63.0403(a)(2)|SDMC|M|Move rocks, destroy vegetation/paths, or reconfigure waterway landscape
-Current SDMC - Waterways|63.0403(a)(3)|SDMC|M|Drive, park, or bring vehicle along waterway bank outside designated area
-Current SDMC - Waterways|63.0403(a)(4)|SDMC|M|Dig on banks of a waterway
-Current SDMC - Waterways|63.0403(a)(5)|SDMC|M|Discharge or store waste along banks or into waterway
-Current SDMC - Encampments|63.0404(a)|SDMC|M|Unauthorized camping or encampment on public property
-Current SDMC - Encampments|63.0404(b)(1)|SDMC|M|Encampment posing immediate threat or unreasonable risk to a person
-Current SDMC - Encampments|63.0404(b)(2)|SDMC|M|Encampment posing immediate threat or unreasonable risk to public health or safety
-Current SDMC - Encampments|63.0404(b)(3)|SDMC|M|Encampment disrupting vital government services
-Current SDMC - Encampments|63.0404(c)(3)|SDMC|M|Camping prohibited in open space, waterway, or waterway banks
-Current SDMC - Encampments|63.0404(c)(5)|SDMC|M|Camping in designated high-risk park where required signs are posted
-Current SDMC - Enforcement Notes|63.0405(b)|SDMC|U|Enforcement limitation for 63.0404(a): shelter availability and 9:00 PM-5:30 AM restriction
-Current SDMC - Enforcement Notes|63.0405(c)|SDMC|U|63.0403 and 63.0404(b)/(c) enforceable regardless of shelter availability
-Current SDMC - Water Safety|63.20.3(a)|SDMC|U|Entering or operating on water contrary to posted warning signals, except rescue
-Current SDMC - Water Safety|63.20.3(b)|SDMC|U|Vessel or board in marked swimming area or over 5 MPH within 100 feet
-Current SDMC - Recreation Facilities|63.03|SDMC|U|Use recreation facility without required permit, ticket, or fee
-Current SDMC - Fire / WUI|511.0307(a)|SDMC|U|Park fires must comply with SDMC 63.0102(c)(11)
-Current SDMC - Fire / WUI|511.0307(c)|SDMC|U|Open burning prohibited during Red Flag Warning or Fire Weather Watch, subject to beach exception
+const DATA = `General Enforcement|31|CVC|M|False Information
+General Enforcement|2800(a)|CVC|M|Fail to obey Lawful Order
+General Enforcement|2800.1(a)|CVC|M|Evading Peace Officer (marked veh)
+General Enforcement|2800.1(b)|CVC|M|Evading Peace Officer (marked bicycle)
+General Enforcement|2800.2|CVC|F|Evade: Reckless Driving
+General Enforcement|2818|CVC|I|Flare or Cone Pattern: Traverse
+Vehicles & Parking|4000(a)(1)|CVC|I|Unregistered Vehicle
+Vehicles & Parking|4159|CVC|I|Notify DMV Address Change (10 days)
+Vehicles & Parking|4160|CVC|I|Address Change on Registration in ink (10 days)
+Vehicles & Parking|4454(a)|CVC|I|Registration: not in veh (CA registered)
+Vehicles & Parking|4462(a)|CVC|I|Registration: not in veh (out of state)
+Vehicles & Parking|4462(b)|CVC|I|Display/Present/Use Wrong reg/tab/plate
+Vehicles & Parking|4462.5|CVC|M|Above: w/intent to avoid Registration Fees
+Vehicles & Parking|4463(a)(1)|CVC|F|Counterfeit Reg/tab/plate
+Vehicles & Parking|4464|CVC|I|Altered License Plate
+Vehicles & Parking|5200|CVC|I|License Plates: 2 attached front/rear
+Vehicles & Parking|5201|CVC|I|License Plates: Securely Mounted: rear 12-16 in, front under 60 in
+Vehicles & Parking|5201(f)|CVC|I|License Plates: Covered
+Vehicles & Parking|5201(g)|CVC|I|License Plates: Obscured
+Vehicles & Parking|5204|CVC|I|Expired Registration Tabs
+Vehicles & Parking|12500(a)|CVC|M|Unlicensed Driver
+Vehicles & Parking|12500(b)|CVC|I|Motorcycle: M1 or M2 License Required
+Vehicles & Parking|12511|CVC|I|No more than one DL
+Vehicles & Parking|12509.5(c)|CVC|I|Motorcycle Instruction Permit Restrictions
+Vehicles & Parking|12814.6(a)(1)|CVC|I|Failure to obey instructional permit restrictions
+Vehicles & Parking|12814.6(b)(1)|CVC|I|Failure to obey Provisional License restrictions
+Vehicles & Parking|12815(a)|CVC|I|DL Mutilated
+Vehicles & Parking|12951(a)|CVC|I|DL not in possession
+Vehicles & Parking|12951(b)|CVC|M|Refuse to Present DL
+Vehicles & Parking|14600(a)|CVC|I|Change of Address
+Vehicles & Parking|14601(a)|CVC|M|Suspended or Revoked: Reckless
+Vehicles & Parking|14601.1(a)|CVC|M|Suspended or Revoked: Not Driving Related
+Vehicles & Parking|14601.2(a)|CVC|M|Suspended or Revoked: DUI
+Vehicles & Parking|14603|CVC|I|Disobey License Restrictions
+Vehicles & Parking|14610(a)(3)|CVC|M|Display Another Person's Driver License
+Vehicles & Parking|14610(a)(8)|CVC|M|Alter Driver License
+Vehicles & Parking|16028(a)|CVC|I|Proof of Insurance
+Vehicles & Parking|21201(d)(1)|CVC|I|Bike Light Visible 300 feet
+Vehicles & Parking|21203|CVC|I|Hitching a Ride
+Vehicles & Parking|21212|CVC|I|Bicycle Helmet under 18
+Vehicles & Parking|21650.1|CVC|I|Riding against traffic
+Vehicles & Parking|21210|CVC|I|Bike blocking sidewalk
+Vehicles & Parking|21205|CVC|I|At least one hand on handlebars
+Vehicles & Parking|21201(a)|CVC|I|Brake Required
+Vehicles & Parking|21204(a)|CVC|I|Rider must ride on permanent attached seat
+Vehicles & Parking|21204(b)|CVC|I|Passenger on bicycle other than seat
+Vehicles & Parking|21453(a)|CVC|I|Red Light
+Vehicles & Parking|21453(b)|CVC|I|Yield Before Right Turn on Red
+Vehicles & Parking|21453(c)|CVC|I|Red Arrow Signal
+Vehicles & Parking|22450|CVC|I|Stop Sign
+Vehicles & Parking|21453(d)|CVC|I|Pedestrian Cross Against Red
+Vehicles & Parking|21457(a)|CVC|I|Flashing Red Signal
+Vehicles & Parking|21460(a)|CVC|I|Double Solid Lines
+Vehicles & Parking|21461(a)|CVC|I|Disobeying Signs
+Vehicles & Parking|21650|CVC|I|Driving: Wrong Side of Roadway
+Vehicles & Parking|21651(a)(1)|CVC|I|Divided Highway Island On, Over, or Across
+Vehicles & Parking|21651(a)(2)|CVC|I|Divided Highway Turn Across
+Vehicles & Parking|21651(b)|CVC|M|Wrong Way on Divided Highway
+Vehicles & Parking|21655.5|CVC|I|Carpool Lanes
+Vehicles & Parking|21657|CVC|I|Wrong Way
+Vehicles & Parking|21658(a)|CVC|I|Unsafe Lane Change or Straddling
+Vehicles & Parking|21663|CVC|I|Driving on Sidewalk
+Vehicles & Parking|21703|CVC|I|Following Too Closely
+Vehicles & Parking|21706|CVC|I|Follow Emergency Vehicle Within 300 Feet
+Vehicles & Parking|21708|CVC|I|Drive Over Fire Hose
+Vehicles & Parking|21755(a)|CVC|I|Passing on Right When Unlawful
+Vehicles & Parking|21800(a)|CVC|I|Uncontrolled Intersection
+Vehicles & Parking|21800(c)|CVC|I|4 Way Stop
+Vehicles & Parking|21802(a)|CVC|I|Enter from a Stop Sign
+Vehicles & Parking|21803(a)|CVC|I|Yield Sign
+Vehicles & Parking|21804(a)|CVC|I|Enter or Cross a Highway
+Vehicles & Parking|21806(a)(1)|CVC|I|Yield to Code-3 Emergency Vehicle
+Vehicles & Parking|21950(a)|CVC|I|Pedestrian in Crosswalk: Driver Yield
+Vehicles & Parking|22100(a)|CVC|I|Right Turn from Right Side
+Vehicles & Parking|22100(b)|CVC|I|Left Turn from Left Side
+Vehicles & Parking|22100.1|CVC|I|U-Turn from Far Left Lane
+Vehicles & Parking|22101(d)|CVC|I|Turns Required or Prohibited by Sign
+Vehicles & Parking|22102|CVC|I|U Turn Business District
+Vehicles & Parking|22103|CVC|I|U Turn Residence District
+Vehicles & Parking|22104|CVC|I|U Turn Fire Station
+Vehicles & Parking|22106|CVC|I|Unsafe Backing or Starting
+Vehicles & Parking|22107|CVC|I|Unsafe Turn or Failure to Signal
+Vehicles & Parking|22108|CVC|I|Turn Signal Required 100 Feet Before Turn
+Vehicles & Parking|22348(b)|CVC|I|Excessive Speed Over 100 MPH
+Vehicles & Parking|22349(a)|CVC|I|Max Speed 65 MPH
+Vehicles & Parking|22350|CVC|I|Unsafe Speed
+Vehicles & Parking|22400(a)|CVC|I|Minimum Speed or Impede Traffic
+Vehicles & Parking|22405(a)|CVC|I|Speed on Bridge
+Vehicles & Parking|22411|CVC|I|Scooter 15 MPH Max
+Vehicles & Parking|22526(a)|CVC|I|Gridlock Driving Straight
+Vehicles & Parking|22526(b)|CVC|I|Gridlock Turning Without Room
+Vehicles & Parking|23103(a)|CVC|M|Reckless Driving Highway
+Vehicles & Parking|23103(b)|CVC|M|Reckless Driving Parking Lot
+Vehicles & Parking|23109(a)|CVC|M|Speed Contest
+Vehicles & Parking|23109(b)|CVC|M|Aid or Abet Speed Contest
+Vehicles & Parking|23109(c)|CVC|M|Exhibition of Speed
+Vehicles & Parking|23110(a)|CVC|M|Throw Substance at Vehicle
+Vehicles & Parking|23110(b)|CVC|F|Throw Substance at Vehicle with Intent to Cause GBI
+Vehicles & Parking|23116(a) or (b)|CVC|I|Passenger in Bed of Pick Up
+Vehicles & Parking|23111|CVC|I|Throw Cigarette or Burning Item
+Vehicles & Parking|23112(a)|CVC|I|Litter on Highway
+Vehicles & Parking|23117(a)|CVC|I|Untethered Animal in Truck Bed
+Vehicles & Parking|21223(a)(1)|CVC|I|Front Light Required
+Vehicles & Parking|21228(a)|CVC|I|Too Slow or Not Riding on Right
+Vehicles & Parking|21229(a)|CVC|I|Required to Ride in Marked Bike Lane
+Vehicles & Parking|21229(b)|CVC|I|Unsafe Lane Change or Fail to Signal
+Vehicles & Parking|21235(b)|CVC|I|Helmet Required
+Vehicles & Parking|21235(d)|CVC|I|Operate Under 16 Years Old
+Vehicles & Parking|21235(g)|CVC|I|Ride on Sidewalk
+Drugs, Alcohol & Tobacco|21200.5|CVC|M|DUI on a Bike
+Drugs, Alcohol & Tobacco|21221.5|CVC|M|DUI Scooter BAC .08 or Greater
+Drugs, Alcohol & Tobacco|23136(a)|CVC|I|Under 21 BAC .01 or Greater
+Drugs, Alcohol & Tobacco|23140|CVC|I|DUI Under 21 BAC .05 or Greater
+Drugs, Alcohol & Tobacco|23152(a)|CVC|M|DUI Driving Under the Influence
+Drugs, Alcohol & Tobacco|23152(b)|CVC|M|DUI BAC .08 or Greater
+Drugs, Alcohol & Tobacco|23153|CVC|F|DUI with Injury
+Drugs, Alcohol & Tobacco|23154(a)|CVC|M|DUI Probationer BAC .01 or Greater
+Drugs, Alcohol & Tobacco|23220|CVC|I|Drive While Drinking
+Drugs, Alcohol & Tobacco|23221|CVC|I|Drinking in Vehicle Upon Highway
+Drugs, Alcohol & Tobacco|23222(a)|CVC|I|Open Container Driver While Driving
+Drugs, Alcohol & Tobacco|23223(a)|CVC|I|Open Container Driver Parked
+Drugs, Alcohol & Tobacco|23223(b)|CVC|I|Open Container Passenger
+Drugs, Alcohol & Tobacco|23222(b)|CVC|M|Marijuana in Vehicle Less Than 28.5g
+Drugs, Alcohol & Tobacco|23224(a)|CVC|I|Driver Under 21 Transport Alcohol
+Drugs, Alcohol & Tobacco|23224(b)|CVC|I|Passenger Under 21 Possess Alcohol
+Drugs, Alcohol & Tobacco|308(b)|PC|I|Minor 16-18 Possess Tobacco
+Vehicles & Parking|23123(a)|CVC|I|Cell Phone Use While Driving
+Vehicles & Parking|23123.5(a)|CVC|I|Texting While Driving
+Vehicles & Parking|23124(b)|CVC|I|Under 18 Use Cell Phone
+Vehicles & Parking|26708(2)|CVC|I|View Obstructed by Object or Material
+Vehicles & Parking|23120|CVC|I|Operate Vehicle with Wide Temple Glasses
+Vehicles & Parking|24250|CVC|I|Drive Without Required Lights During Darkness
+Vehicles & Parking|24252(a)|CVC|I|Lighting Devices in Good Working Order
+Vehicles & Parking|24400|CVC|I|Headlamps Required
+Vehicles & Parking|24403|CVC|I|Fog Lamps Not in Place of Headlamps
+Vehicles & Parking|24405(a)|CVC|I|Forward Lamps Not to Exceed 4
+Vehicles & Parking|24409(a)|CVC|I|Failure to Dim High Beams Oncoming
+Vehicles & Parking|24409(b)|CVC|I|Failure to Dim High Beams Following
+Vehicles & Parking|24600|CVC|I|Tail Lamps Required
+Vehicles & Parking|24601|CVC|I|License Plate Light Required
+Vehicles & Parking|24603(b)|CVC|I|Stop Lamps Required
+Vehicles & Parking|24606(c)|CVC|I|Backup Lamps Used Other Than Backing
+Vehicles & Parking|24951(b)(1)|CVC|I|Turn Signals Required Front and Rear
+Vehicles & Parking|25400(a)|CVC|I|Improper Lights to Front
+Vehicles & Parking|25400(b)|CVC|I|Modified Lights or Equipment Color
+Vehicles & Parking|26101(b)|CVC|I|Modify Lights or Equipment Color
+Vehicles & Parking|26707|CVC|I|Windshield Wipers
+Vehicles & Parking|26708(a)(1)|CVC|I|Window Obstructed
+Vehicles & Parking|26708(b)|CVC|I|View Obstructed
+Vehicles & Parking|26708.5|CVC|I|Window Tint
+Vehicles & Parking|26709(a)|CVC|I|Rear View Mirror Required
+Vehicles & Parking|26709(b)|CVC|I|Side View Mirrors Required
+Vehicles & Parking|26710|CVC|I|Defective Windshield
+Vehicles & Parking|27000|CVC|I|Horn Required
+Vehicles & Parking|27007|CVC|I|Loud Stereo Greater Than 50 Feet
+Vehicles & Parking|27150(a)|CVC|I|Muffler Defective or Excessive Noise
+Vehicles & Parking|27155|CVC|I|Gas Cap Required
+Vehicles & Parking|27315(d)|CVC|I|Seatbelt Required Driver
+Vehicles & Parking|27315(e)|CVC|I|Seatbelt Required Passenger
+Vehicles & Parking|27360(a)|CVC|I|Child Seat Parent
+Vehicles & Parking|27360(b)|CVC|I|Child Seat Driver
+Vehicles & Parking|27400|CVC|I|Headset or Earplugs Cover Both Ears
+Vehicles & Parking|27465(b)|CVC|I|Bald Tires
+Vehicles & Parking|27600|CVC|I|Fenders or Mudguards Required
+Vehicles & Parking|28701|CVC|I|Bumpers Required
+Vehicles & Parking|27803(b)|CVC|I|Motorcycle Helmet Required
+Vehicles & Parking|22651(a)|CVC|TOW|Unattended on Bridge
+Vehicles & Parking|22651(b)|CVC|TOW|Blocks Highway
+Vehicles & Parking|22651(c)|CVC|TOW|Stolen or Embezzled
+Vehicles & Parking|22651(d)|CVC|TOW|Blocking Driveway
+Vehicles & Parking|22651(e)|CVC|TOW|Blocking Fire Hydrant
+Vehicles & Parking|22651(h)(1)|CVC|TOW|Driver Arrested
+Vehicles & Parking|22651(h)(2)|CVC|TOW|Alcohol Screen Test Driver Under 21
+Vehicles & Parking|22651(i)(1)|CVC|TOW|5 or More Parking Violations
+Vehicles & Parking|22651(k)|CVC|TOW|72 Hour Violation
+Vehicles & Parking|22651(n)|CVC|TOW|Posted Signs
+Vehicles & Parking|22651(o)(1)|CVC|TOW|Expired Registration 6 Months
+Vehicles & Parking|22651(o)(2)|CVC|TOW|Expired Registration Off Street
+Vehicles & Parking|22651(p)|CVC|TOW|12500 and 14601 Violations
+Vehicles & Parking|22651.5(a)|CVC|TOW|Alarm or Horn 45 Minutes
+Vehicles & Parking|22669(a)|CVC|TOW|Abandoned Vehicle
+Vehicles & Parking|22669(b)|CVC|TOW|Vehicle Public Hazard
+Vehicles & Parking|22655(a)|CVC|TOW|Involved in Hit and Run
+Vehicles & Parking|22655.5|CVC|TOW|Impound for Investigation
+Fire & Emergency|12676|HSC|M|Fireworks Unlawful Sales
+Fire & Emergency|12677|HSC|M|Fireworks Possession
+Fire & Emergency|12680|HSC|M|Fireworks Unlawful Discharge
+Fire & Emergency|78.1028|UFC|M|Fireworks Possess, Use, Explode, Store, or Sell
+Drugs, Alcohol & Tobacco|25661|BPC|I|Possess False ID by Minor
+Drugs, Alcohol & Tobacco|25662(a)|BPC|M|Minor Possess Alcohol in Public
+Drugs, Alcohol & Tobacco|25668(a)|BPC|M|Minor Sell or Furnish Alcohol to Under 21
+Drugs, Alcohol & Tobacco|25668(b)|BPC|M|Minor Buy or Consume Alcohol
+Drugs, Alcohol & Tobacco|25668(c)|BPC|M|Purchase or Furnish Alcohol to Minor
+Drugs, Alcohol & Tobacco|25668(d)|BPC|M|Allow Minor to Consume Alcohol in Bar
+Public Safety & Conduct|136.1|PC|F|DV Dissuading Witness or Victim
+Public Safety & Conduct|236|PC|F|DV False Imprisonment
+Public Safety & Conduct|243(e)(1)|PC|F|DV Battery
+Public Safety & Conduct|273.5|PC|F|DV Injury to Spouse or Cohabitant
+Public Safety & Conduct|591|PC|F|DV Injury to Phone Line
+Public Safety & Conduct|646.9(a)|PC|F|DV Stalking
+Public Safety & Conduct|646.9(b)|PC|F|DV Stalking with TRO
+Public Safety & Conduct|13730|PC|F|DV Incident Report
+Public Safety & Conduct|166(a)(4)|PC|M|Court Order Violation Criminal
+Public Safety & Conduct|215(a)|PC|F|Carjacking
+Public Safety & Conduct|245(a)(1)|PC|F|ADW or GBI Other Than Firearm
+Public Safety & Conduct|245(a)(2)|PC|F|ADW Firearm
+Public Safety & Conduct|273.6|PC|M|Court Order Civil DV or EPO
+Public Safety & Conduct|243(a)|PC|M|Battery
+Public Safety & Conduct|374.3(a)|PC|I|Urinating in Public or Waste Matter
+Public Safety & Conduct|374.4|PC|I|Littering
+Public Safety & Conduct|140|PC|F|Threatening Witness
+Public Safety & Conduct|148(a)(1)|PC|M|Resist Delay Obstruct
+Public Safety & Conduct|148.5|PC|M|False Police Report
+Public Safety & Conduct|148.9(a)|PC|M|False Identity to Officer
+Public Safety & Conduct|422|PC|M|Criminal Threats
+Public Safety & Conduct|314|PC|U|Lewd or Obscene Acts
+Public Safety & Conduct|370|PC|M|Public Nuisance
+Public Safety & Conduct|451|PC|F|Arson
+Public Safety & Conduct|466|PC|M|Burglary Tools
+Public Safety & Conduct|470|PC|F|Forgery
+Public Safety & Conduct|485|PC|F|Misappropriation of Found Property
+Public Safety & Conduct|487|PC|F|Grand Theft Over 950
+Public Safety & Conduct|488|PC|M|Petty Theft Under 950
+Public Safety & Conduct|3056|PC|U|Parole Violation Hold
+Public Safety & Conduct|21510|PC|M|Switchblade
+Public Safety & Conduct|25400(a)|PC|M|Concealed Firearm
+Public Safety & Conduct|25850(a)|PC|M|Loaded Firearm Open Carry
+Public Safety & Conduct|Various|PC|F|Possession of Weapon
+Drugs, Alcohol & Tobacco|11350|HSC|F|Drugs Possession
+Drugs, Alcohol & Tobacco|11351|HSC|F|Drugs Possession for Sales
+Drugs, Alcohol & Tobacco|11352|HSC|F|Drugs Sell Furnish Give Transport
+Drugs, Alcohol & Tobacco|11368|HSC|F|Forged or Altered Prescription
+Drugs, Alcohol & Tobacco|11357(a)|HSC|F|Drugs Possession More Than 28.5g
+Drugs, Alcohol & Tobacco|11357(b)|HSC|F|Drugs Possession Less Than 28.5g
+Drugs, Alcohol & Tobacco|11359|HSC|F|Drugs Possession for Sales
+Drugs, Alcohol & Tobacco|11360(a)|HSC|F|Drugs Sell or Furnish
+Drugs, Alcohol & Tobacco|11361|HSC|F|Drugs Use of or Sales to Minor
+Drugs, Alcohol & Tobacco|11358|HSC|F|Drugs Cultivate Harvest Process
+Drugs, Alcohol & Tobacco|11377|HSC|U|Possession
+Drugs, Alcohol & Tobacco|11378|HSC|F|Drugs Possession for Sales
+Drugs, Alcohol & Tobacco|11379(a)|HSC|F|Drugs Sell Furnish Give Transport
+Drugs, Alcohol & Tobacco|11380|HSC|F|Drugs Use of or Sales to Minor
+Drugs, Alcohol & Tobacco|11357|HSC|F|Under the Influence of Controlled Substance
+Drugs, Alcohol & Tobacco|11391|HSC|F|Mushrooms Transport or Sell
+Drugs, Alcohol & Tobacco|11364|HSC|M|Possession of Paraphernalia
+Drugs, Alcohol & Tobacco|4140|BPC|M|Possess Hypodermic Needle
+Drugs, Alcohol & Tobacco|4060|BPC|M|Possess Prescription Drug Without Prescription
+Vehicles & Parking|5200|CVC|I|License Plates Missing Parked
+Vehicles & Parking|5204|CVC|I|Expired Tags Parked
+Vehicles & Parking|22500(a)|CVC|I|Parking in Intersection
+Vehicles & Parking|22500(b)|CVC|I|Parking in Crosswalk
+Vehicles & Parking|22500(c)|CVC|I|Parked Red Curb or Safety Zone
+Vehicles & Parking|22500(d)|CVC|I|Parked Within 15 Feet of Fire Department Driveway
+Vehicles & Parking|22500(e)(1)|CVC|I|Parked Blocking Driveway
+Vehicles & Parking|22500(f)|CVC|I|Parking on or Across Sidewalk
+Vehicles & Parking|22500(h)|CVC|I|Double Parking
+Vehicles & Parking|22500(i)|CVC|I|Parking in Bus Loading Zone
+Vehicles & Parking|22500.1|CVC|I|Stop Stand Park in Fire Lane
+Vehicles & Parking|22502a|CVC|I|Parked Wrong Side or Over 18 Inches from Curb
+Vehicles & Parking|22505b|CVC|I|Parked on Posted Highway
+Vehicles & Parking|22514|CVC|I|Parked Within 15 Feet of Hydrant
+Vehicles & Parking|22507.8a|CVC|I|Disabled Parking Space
+Vehicles & Parking|22507.8c|CVC|I|Park on Disabled Space Crosshatch
+Vehicles & Parking|22522|CVC|I|Parked Within 3 Feet of Access Ramp
+Park & Environmental|62.0606|SDMC|I|Attaching Rope, Wire, Etc. Detrimental Substance Prohibited
+Park & Environmental|43.0304|SDMC|M|Illegal Discharge into Storm Drain
+Park & Environmental|62.0604|SDMC|I|Removal of Planting Prohibited
+Special Regulations|52.5403|SDMC|M|Drones Careless or Reckless / FAA Restriction / Emergency Interference
+Special Regulations|63.0201(b)|SDMC|M|Soaring or Gliding Without Permit
+Public Safety & Conduct|498(b)(5)|PC|M|Utility Theft: City Electricity Without Permission
+Public Safety & Conduct|602(m)|PC|M|Trespass: Entering and Occupying Real Property or Structures
+Public Safety & Conduct|602(e)|PC|M|Trespass and Remove Earth, Soil, or Stone from Park
+Public Safety & Conduct|602(h)|PC|M|Trespass Fence or Gate by Opening or Destroying
+Public Safety & Conduct|602(j)|PC|M|Trespass Land and Injure Property of Owner
+Public Safety & Conduct|602(k)(3)|PC|M|Trespass Posted Land by Damaging or Unlocking Gate Lock
+Public Safety & Conduct|63.0106(a)|SDMC|I|Skating Prohibited Balboa Park
+Park & Environmental|63.0102(c)(1)|SDMC|I|Posting of Handbills Prohibited
+Park & Environmental|63.0102(c)(2)|SDMC|I|Loose Animal
+Park & Environmental|63.0102(c)(2)(B)|SDMC|I|Dog Leash Exceeds 8 Feet
+Park & Environmental|63.0102(e)(1)|SDMC|I|Dog License Required Over 4 Months
+Park & Environmental|63.0102(c)(3)|SDMC|I|Fireworks Prohibited
+Park & Environmental|63.0102(c)(4)|SDMC|I|Destruction of Plants
+Park & Environmental|63.0102(c)(5)|SDMC|I|Defacement of Property
+Park & Environmental|63.0102(c)(6)|SDMC|I|Dumping Prohibited
+Park & Environmental|63.0102(c)(7)|SDMC|I|Glass Containers Prohibited
+Park & Environmental|63.0102(c)(8)|SDMC|I|Littering Prohibited
+Park & Environmental|63.0102(c)(9)|SDMC|I|Park Waters
+Park & Environmental|63.0102(c)(10)|SDMC|I|Mistreating Animals
+Park & Environmental|63.0102(c)(11)|SDMC|I|Fires Prohibited
+Park & Environmental|63.0102(c)(12)|SDMC|I|Temporary Structures Prohibited
+Park & Environmental|63.0102(c)(13)|SDMC|I|Sales Prohibited
+Park & Environmental|63.0102(c)(14)|SDMC|I|Commercial Activity or Service Prohibited
+Park & Environmental|63.0102(c)(15)|SDMC|I|Shows Prohibited
+Park & Environmental|63.0102(c)(16)|SDMC|I|Indecent Conduct or Threat
+Park & Environmental|63.0102(c)(17)|SDMC|I|Sports in Designated Areas Only
+Park & Environmental|63.0102(c)(18)|SDMC|I|Disobey Lawful Order or False ID
+Park & Environmental|63.0102(c)(19)(1)|SDMC|I|Bicycles Prohibited
+Park & Environmental|63.0102(c)(19)(4)|SDMC|I|Motorized Vehicles Prohibited
+Park & Environmental|63.0102(c)(20)|SDMC|I|Speeding in Park
+Park & Environmental|63.0102(c)(21)|SDMC|I|Parking in Undesignated Area
+Park & Environmental|63.0102(c)(22)|SDMC|I|Car Washing Prohibited
+Park & Environmental|63.0102(c)(23)|SDMC|I|Oversized Vehicular Traffic
+Park & Environmental|63.0102(c)(24)|SDMC|I|Large Groups 50+ People
+Park & Environmental|63.0102(c)(24)|SDMC|I|Obstructing Traffic
+Park & Environmental|63.0102(c)(26)|SDMC|I|Move or Destroy Park Materials
+Park & Environmental|63.1012(c)(27)|SDMC|I|Bridle Trails Equestrian Only
+Park & Environmental|63.0102(c)(28)|SDMC|I|Unlawful Use of Valves or Utilities
+Public Safety & Conduct|63.20.5(j)|SDMC|I|Household Furniture in Public Coastal
+Public Safety & Conduct|56.55|SDMC|I/M|Urination or Defecation
+Public Safety & Conduct|22435.2(f)|BPC|M|Shopping Cart with Placard
+Public Safety & Conduct|54.0110|SDMC|I|Unauthorized Encroachment
+Public Safety & Conduct|66.0402|SDMC|I/M|Unauthorized Collection of Recyclables
+Public Safety & Conduct|64.0301(a)|SDMC|M|Discharge of Wastewater
+Public Safety & Conduct|63.20.5(b)|SDMC|I|Refuse Receptacle Rummage
+Public Safety & Conduct|66.0301|SDMC|I|Tampering with or Removal of Refuse
+Public Safety & Conduct|594(b)(2)(a)|PC|M|Vandalism Under $950
+Public Safety & Conduct|594(b)(1)|PC|F|Felony Vandalism $950 or More
+Public Safety & Conduct|63.07|SDMC|I/M|Torrey Pine Trees Destruction or Injury
+Public Safety & Conduct|622|PC|M|Injure, Disfigure, or Destroy Monument, Art, Shade Tree, or Ornamental Plant
+Public Safety & Conduct|622.5|PC|M|Injure, Deface, or Destroy Archaeological or Historical Object
+Public Safety & Conduct|594.2(a)|PC|M|Possession of Graffiti Tools with Intent
+Public Safety & Conduct|56.53(c)|SDMC|M|Public Nudity
+Public Safety & Conduct|314|PC|M|Indecent Exposure
+Public Safety & Conduct|647(a)|PC|M|Lewd Act in Public
+Park & Environmental|44.0103|SDMC|I|Spitting Prohibited
+Park & Environmental|374.7(a)|PC|M|Polluting Waterway Within 150 Feet of High Water Mark
+Drugs, Alcohol & Tobacco|56.61(a)|SDMC|I/J|Minor Consumption of Alcohol
+Drugs, Alcohol & Tobacco|25662(a)|BPC|I/J|Minor in Possession of Alcohol
+Drugs, Alcohol & Tobacco|58.04|SDMC|I/J|Minor in Possession of Tobacco
+Drugs, Alcohol & Tobacco|594.1(e)(1)|PC|I/J|Minor in Possession of Aerosol Can
+Fire & Emergency|53.10(c)|SDMC|M|Discharge Firearms or Explosives Unauthorized
+Fire & Emergency|63.08|SDMC|M|Discharge of Firearms Prohibited
+Fire & Emergency|63.20.19|SDMC|I|Weapons or Firearms Prohibited
+Fire & Emergency|13002(a)|HSC|M|Fire Ignition Source
+Park & Environmental|63.0102(e)(2)|SDMC|I|Dog Bite Injury
+Park & Environmental|44.0304.1|SDMC|I|Dog Defecation Not Cleaned Up
+Park & Environmental|620(a)|SDCC|I|Dog License Required
+Park & Environmental|251.1|CCR|M|Harassment of Animals
+Park & Environmental|59.5.0502(c)(1)|SDMC|I|Loud Dogs in Permitted Site
+Park & Environmental|44.0305(a)|SDMC|I|Wild Animals and Prohibited Species
+Park & Environmental|44.0204|SDMC|I|Manure / Animal Excreta Prohibited
+Park & Environmental|44.0305(b)(3)(A)|SDMC|I|Boa or Snake Must Be in Cage
+Park & Environmental|62.0605|SDMC|I|Fastening Animals to Trees or Other Objects
+Public Safety & Conduct|59.5.0502(b)(1)|SDMC|M|Amplification
+Public Safety & Conduct|59.5.0502(f)|SDMC|I|Excessive Sound Over 65dB at 10 Feet
+Drugs, Alcohol & Tobacco|25620(a)|BPC|I|No Alcohol in Undesignated Area
+Drugs, Alcohol & Tobacco|56.56(a)|SDMC|I|Open Container of Alcohol
+Drugs, Alcohol & Tobacco|56.54(b)|SDMC|I/M|Consumption of Alcohol
+Drugs, Alcohol & Tobacco|23223(a)|CVC|I|Possess Alcohol in Vehicle Driver
+Drugs, Alcohol & Tobacco|23224(a)|CVC|I|Possess Alcohol in Vehicle Under 21
+Drugs, Alcohol & Tobacco|43.1002(g)|SDMC|I|Smoking or Vaping
+Drugs, Alcohol & Tobacco|42.1303|SDMC|I|Smoking or Vaping Marijuana
+Drugs, Alcohol & Tobacco|11364|HSC|M|Drug Paraphernalia
+Drugs, Alcohol & Tobacco|4140|BPC|M|Syringe
+General Enforcement|148(a)|PC|M|Obstruct or Delay
+General Enforcement|52.05|SDMC|M|Furnish False Information to Peace Officer
+General Enforcement|63.20.13|SDMC|I|Rules to be Followed / Posting
+General Enforcement|62.0612|SDMC|I/M|Interference with Employee Prohibited
+Vehicles & Parking|23127|CVC|M|Off-Roading Prohibited Where Clearly Marked
+Vehicles & Parking|2146(a)|CVC|I|Disobey Official Traffic Sign Wrong Way
+Vehicles & Parking|38319|CVC|I/M|Damage Environment While Operating Off-Highway Vehicle
+Vehicles & Parking|23103(b)|CVC|M|Reckless Driving in Parking Area
+Vehicles & Parking|38301|CVC|I|Operating Vehicle on Lands Not Authorized
+Vehicles & Parking|21207.5(a)|CVC|I|Class 3 Bikes Prohibited on Trail
+Vehicles & Parking|86.0137(b)|SDMC|I|Repair Vehicle Prohibited
+Vehicles & Parking|38320(a)|CVC|I|Littering from Vehicle Likely to Injure Animal or Plant
+Vehicles & Parking|22450(a)|CVC|I|Stop Sign Failure to Stop at Limit Line
+Vehicles & Parking|141.0612(c)(10)|SDMC|I|Food Trucks Prohibited Coastal
+Vehicles & Parking|142.0510(b)|SDMC|I|Parking Spaces to be Kept Clear
+Special Regulations|54.0212(b)|SDMC|U|Abandoned Property Unsanitary
+Special Regulations|54.0212(a)|SDMC|U|Abandoned Property Sanitary
+Park & Environmental|63.0403(a)(1)|SDMC|M|Build or affix structures to trees/vegetation along waterway banks
+Park & Environmental|63.0403(a)(2)|SDMC|M|Move rocks, destroy vegetation/paths, or reconfigure waterway landscape
+Park & Environmental|63.0403(a)(3)|SDMC|M|Drive, park, or bring vehicle along waterway bank outside designated area
+Park & Environmental|63.0403(a)(4)|SDMC|M|Dig on banks of a waterway
+Park & Environmental|63.0403(a)(5)|SDMC|M|Discharge or store waste along banks or into waterway
+Encampments|63.0404(a)|SDMC|M|Unauthorized camping or encampment on public property
+Encampments|63.0404(b)(1)|SDMC|M|Encampment posing immediate threat or unreasonable risk to a person
+Encampments|63.0404(b)(2)|SDMC|M|Encampment posing immediate threat or unreasonable risk to public health or safety
+Encampments|63.0404(b)(3)|SDMC|M|Encampment disrupting vital government services
+Encampments|63.0404(c)(3)|SDMC|M|Camping prohibited in open space, waterway, or waterway banks
+Encampments|63.0404(c)(5)|SDMC|M|Camping in designated high-risk park where required signs are posted
+Encampments|63.0405(b)|SDMC|U|Enforcement limitation for 63.0404(a): shelter availability and 9:00 PM-5:30 AM restriction
+Encampments|63.0405(c)|SDMC|U|63.0403 and 63.0404(b)/(c) enforceable regardless of shelter availability
+Beach & Waterfront|63.20.3(a)|SDMC|U|Entering or operating on water contrary to posted warning signals, except rescue
+Beach & Waterfront|63.20.3(b)|SDMC|U|Vessel or board in marked swimming area or over 5 MPH within 100 feet
+Park & Environmental|63.03|SDMC|U|Use recreation facility without required permit, ticket, or fee
+Fire & Emergency|511.0307(a)|SDMC|U|Park fires must comply with SDMC 63.0102(c)(11)
+Fire & Emergency|511.0307(c)|SDMC|U|Open burning prohibited during Red Flag Warning or Fire Weather Watch, subject to beach exception
 
-Beach / Pier|63.20.16(a)|SDMC|M|Unauthorized vehicle on fishing pier
-Beach / Pier|63.20.16(b)|SDMC|M|Bicycle or skateboard on fishing pier
-Beach / Pier|63.20.16(c)|SDMC|M|Diving or jumping from fishing pier
-Beach / Pier|63.20.16(d)|SDMC|M|Swimming or surfing within 75 feet of fishing pier
-Beach / Pier|63.20.16(e)|SDMC|M|Climbing on fishing pier railings
-Beach / Pier|63.20.16(f)|SDMC|M|Unsafe casting on fishing pier
-Beach / Pier|63.20.16(g)|SDMC|M|Improper fish cleaning on fishing pier
-Beach / Pier|63.20.16(h)|SDMC|M|Littering on fishing pier
-Beach / Pier|63.20.16(i)|SDMC|M|More than one fishing line on fishing pier
-Beach / Pier|63.20.16(j)|SDMC|M|Animal on fishing pier
-Beach / Pier|63.20.16(k)|SDMC|M|Surf casting within 200 feet of fishing pier
-Beach / Pier|63.20.16(l)|SDMC|M|Commercial fishing from fishing pier
-Beach / Pier|63.20.16(m)|SDMC|M|Spear gun on fishing pier
-Beach / Pier|63.20.16(n)|SDMC|M|Vessel within 100 feet of fishing pier
-Beach / Pier|63.20.16(o)|SDMC|M|Fire on fishing pier
-Beach / Pier|63.20.16(p)|SDMC|M|Smoking or vaping on fishing pier
-Beach / Pier|63.20.16(q)|SDMC|M|Unauthorized sales on fishing pier
-Beach / Vehicles|63.20.7(a)|SDMC|U|Motor vehicle prohibited on beach, adjacent sidewalk, or turf except authorized use
-Beach / Vehicles|63.20.7(b)|SDMC|U|Permitted vehicle over 5 MPH on beach or adjacent area
-Boat Launch|63.20.10(a)|SDMC|U|Block or obstruct designated boat launch area
-Boat Launch|63.20.10(b)|SDMC|U|Leave vehicle unattended in designated boat launch area
-Boat Launch|63.20.10(c)|SDMC|U|Obstruct boat launch through repeated or extended use
-Encampment Restrictions|63.0404(c)(1)|SDMC|M|Camping within two blocks of school
-Encampment Restrictions|63.0404(c)(2)|SDMC|M|Camping within two blocks of shelter
-Encampment Restrictions|63.0404(c)(4)|SDMC|M|Camping at transit hub, trolley platform, or trolley tracks where posted
-Expressive Activity|63.0503(a)|SDMC|U|Expressive activity footprint exceeds allowed area
-Expressive Activity|63.0503(b)|SDMC|U|Display merchandise on ground or public structures
-Expressive Activity|63.0503(c)|SDMC|U|Obstruct pedestrian or emergency access / reduce usable sidewalk width below 48 inches
-Expressive Activity|63.0503(d)|SDMC|U|Attach expressive activity equipment to public infrastructure
-Expressive Activity|63.0503(e)|SDMC|U|Expressive activity violates applicable sound limits
-Expressive Activity|63.0504(a)|SDMC|U|Use table/easel/chair/umbrella outside designated expressive activity area
-Expressive Activity|63.0504(b)|SDMC|U|Vending prohibited within designated expressive activity area
-Expressive Activity|63.0504(c)|SDMC|U|Buy, sell, reserve, or hold expressive activity space
-Expressive Activity|63.0506(a)|SDMC|U|First administrative citation for expressive activity violation
-Expressive Activity|63.0506(b)|SDMC|U|Second administrative citation within one year
-Expressive Activity|63.0506(c)|SDMC|U|Third or subsequent administrative citation within one year
-Fire / Emergency Access|511.0304|SDMC|U|Dump or deposit waste in Wildland-Urban Interface area or along associated trails/roads
-Fire / Emergency Access|511.0503|SDMC|U|Parking prohibited in signed high-fire-risk area during Red Flag Warning or Fire Weather Watch
-Reference Only|59.5.0402|SDMC|U|Excessive off-highway motor vehicle noise
-`;
+Beach & Waterfront|63.20.16(a)|SDMC|M|Unauthorized vehicle on fishing pier
+Beach & Waterfront|63.20.16(b)|SDMC|M|Bicycle or skateboard on fishing pier
+Beach & Waterfront|63.20.16(c)|SDMC|M|Diving or jumping from fishing pier
+Beach & Waterfront|63.20.16(d)|SDMC|M|Swimming or surfing within 75 feet of fishing pier
+Beach & Waterfront|63.20.16(e)|SDMC|M|Climbing on fishing pier railings
+Beach & Waterfront|63.20.16(f)|SDMC|M|Unsafe casting on fishing pier
+Beach & Waterfront|63.20.16(g)|SDMC|M|Improper fish cleaning on fishing pier
+Beach & Waterfront|63.20.16(h)|SDMC|M|Littering on fishing pier
+Beach & Waterfront|63.20.16(i)|SDMC|M|More than one fishing line on fishing pier
+Beach & Waterfront|63.20.16(j)|SDMC|M|Animal on fishing pier
+Beach & Waterfront|63.20.16(k)|SDMC|M|Surf casting within 200 feet of fishing pier
+Beach & Waterfront|63.20.16(l)|SDMC|M|Commercial fishing from fishing pier
+Beach & Waterfront|63.20.16(m)|SDMC|M|Spear gun on fishing pier
+Beach & Waterfront|63.20.16(n)|SDMC|M|Vessel within 100 feet of fishing pier
+Beach & Waterfront|63.20.16(o)|SDMC|M|Fire on fishing pier
+Beach & Waterfront|63.20.16(p)|SDMC|M|Smoking or vaping on fishing pier
+Beach & Waterfront|63.20.16(q)|SDMC|M|Unauthorized sales on fishing pier
+Beach & Waterfront|63.20.7(a)|SDMC|U|Motor vehicle prohibited on beach, adjacent sidewalk, or turf except authorized use
+Beach & Waterfront|63.20.7(b)|SDMC|U|Permitted vehicle over 5 MPH on beach or adjacent area
+Beach & Waterfront|63.20.10(a)|SDMC|U|Block or obstruct designated boat launch area
+Beach & Waterfront|63.20.10(b)|SDMC|U|Leave vehicle unattended in designated boat launch area
+Beach & Waterfront|63.20.10(c)|SDMC|U|Obstruct boat launch through repeated or extended use
+Encampments|63.0404(c)(1)|SDMC|M|Camping within two blocks of school
+Encampments|63.0404(c)(2)|SDMC|M|Camping within two blocks of shelter
+Encampments|63.0404(c)(4)|SDMC|M|Camping at transit hub, trolley platform, or trolley tracks where posted
+Expressive Activity & Vending|63.0503(a)|SDMC|U|Expressive activity footprint exceeds allowed area
+Expressive Activity & Vending|63.0503(b)|SDMC|U|Display merchandise on ground or public structures
+Expressive Activity & Vending|63.0503(c)|SDMC|U|Obstruct pedestrian or emergency access / reduce usable sidewalk width below 48 inches
+Expressive Activity & Vending|63.0503(d)|SDMC|U|Attach expressive activity equipment to public infrastructure
+Expressive Activity & Vending|63.0503(e)|SDMC|U|Expressive activity violates applicable sound limits
+Expressive Activity & Vending|63.0504(a)|SDMC|U|Use table/easel/chair/umbrella outside designated expressive activity area
+Expressive Activity & Vending|63.0504(b)|SDMC|U|Vending prohibited within designated expressive activity area
+Expressive Activity & Vending|63.0504(c)|SDMC|U|Buy, sell, reserve, or hold expressive activity space
+Expressive Activity & Vending|63.0506(a)|SDMC|U|First administrative citation for expressive activity violation
+Expressive Activity & Vending|63.0506(b)|SDMC|U|Second administrative citation within one year
+Expressive Activity & Vending|63.0506(c)|SDMC|U|Third or subsequent administrative citation within one year
+Fire & Emergency|511.0304|SDMC|U|Dump or deposit waste in Wildland-Urban Interface area or along associated trails/roads
+Fire & Emergency|511.0503|SDMC|U|Parking prohibited in signed high-fire-risk area during Red Flag Warning or Fire Weather Watch
+Reference Only|59.5.0402|SDMC|U|Excessive off-highway motor vehicle noise`;
 
 const FULL_TEXT: Record<string, string> = {
   "CVC 31": "No person shall give false information to a peace officer while the officer is performing duties under the Vehicle Code.",

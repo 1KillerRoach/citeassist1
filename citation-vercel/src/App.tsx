@@ -494,6 +494,46 @@ Current SDMC - Water Safety|63.20.3(b)|SDMC|U|Vessel or board in marked swimming
 Current SDMC - Recreation Facilities|63.03|SDMC|U|Use recreation facility without required permit, ticket, or fee
 Current SDMC - Fire / WUI|511.0307(a)|SDMC|U|Park fires must comply with SDMC 63.0102(c)(11)
 Current SDMC - Fire / WUI|511.0307(c)|SDMC|U|Open burning prohibited during Red Flag Warning or Fire Weather Watch, subject to beach exception
+
+Beach / Pier|63.20.16(a)|SDMC|M|Unauthorized vehicle on fishing pier
+Beach / Pier|63.20.16(b)|SDMC|M|Bicycle or skateboard on fishing pier
+Beach / Pier|63.20.16(c)|SDMC|M|Diving or jumping from fishing pier
+Beach / Pier|63.20.16(d)|SDMC|M|Swimming or surfing within 75 feet of fishing pier
+Beach / Pier|63.20.16(e)|SDMC|M|Climbing on fishing pier railings
+Beach / Pier|63.20.16(f)|SDMC|M|Unsafe casting on fishing pier
+Beach / Pier|63.20.16(g)|SDMC|M|Improper fish cleaning on fishing pier
+Beach / Pier|63.20.16(h)|SDMC|M|Littering on fishing pier
+Beach / Pier|63.20.16(i)|SDMC|M|More than one fishing line on fishing pier
+Beach / Pier|63.20.16(j)|SDMC|M|Animal on fishing pier
+Beach / Pier|63.20.16(k)|SDMC|M|Surf casting within 200 feet of fishing pier
+Beach / Pier|63.20.16(l)|SDMC|M|Commercial fishing from fishing pier
+Beach / Pier|63.20.16(m)|SDMC|M|Spear gun on fishing pier
+Beach / Pier|63.20.16(n)|SDMC|M|Vessel within 100 feet of fishing pier
+Beach / Pier|63.20.16(o)|SDMC|M|Fire on fishing pier
+Beach / Pier|63.20.16(p)|SDMC|M|Smoking or vaping on fishing pier
+Beach / Pier|63.20.16(q)|SDMC|M|Unauthorized sales on fishing pier
+Beach / Vehicles|63.20.7(a)|SDMC|U|Motor vehicle prohibited on beach, adjacent sidewalk, or turf except authorized use
+Beach / Vehicles|63.20.7(b)|SDMC|U|Permitted vehicle over 5 MPH on beach or adjacent area
+Boat Launch|63.20.10(a)|SDMC|U|Block or obstruct designated boat launch area
+Boat Launch|63.20.10(b)|SDMC|U|Leave vehicle unattended in designated boat launch area
+Boat Launch|63.20.10(c)|SDMC|U|Obstruct boat launch through repeated or extended use
+Encampment Restrictions|63.0404(c)(1)|SDMC|M|Camping within two blocks of school
+Encampment Restrictions|63.0404(c)(2)|SDMC|M|Camping within two blocks of shelter
+Encampment Restrictions|63.0404(c)(4)|SDMC|M|Camping at transit hub, trolley platform, or trolley tracks where posted
+Expressive Activity|63.0503(a)|SDMC|U|Expressive activity footprint exceeds allowed area
+Expressive Activity|63.0503(b)|SDMC|U|Display merchandise on ground or public structures
+Expressive Activity|63.0503(c)|SDMC|U|Obstruct pedestrian or emergency access / reduce usable sidewalk width below 48 inches
+Expressive Activity|63.0503(d)|SDMC|U|Attach expressive activity equipment to public infrastructure
+Expressive Activity|63.0503(e)|SDMC|U|Expressive activity violates applicable sound limits
+Expressive Activity|63.0504(a)|SDMC|U|Use table/easel/chair/umbrella outside designated expressive activity area
+Expressive Activity|63.0504(b)|SDMC|U|Vending prohibited within designated expressive activity area
+Expressive Activity|63.0504(c)|SDMC|U|Buy, sell, reserve, or hold expressive activity space
+Expressive Activity|63.0506(a)|SDMC|U|First administrative citation for expressive activity violation
+Expressive Activity|63.0506(b)|SDMC|U|Second administrative citation within one year
+Expressive Activity|63.0506(c)|SDMC|U|Third or subsequent administrative citation within one year
+Fire / Emergency Access|511.0304|SDMC|U|Dump or deposit waste in Wildland-Urban Interface area or along associated trails/roads
+Fire / Emergency Access|511.0503|SDMC|U|Parking prohibited in signed high-fire-risk area during Red Flag Warning or Fire Weather Watch
+Reference Only|59.5.0402|SDMC|U|Excessive off-highway motor vehicle noise
 `;
 
 const FULL_TEXT: Record<string, string> = {
@@ -529,6 +569,45 @@ const FULL_TEXT: Record<string, string> = {
   "SDMC 63.03": "It is unlawful to use a municipal recreation facility for which a fee, ticket, or permit has been established without first obtaining the required authorization or paying the required fee.",
   "SDMC 511.0307(a)": "The current San Diego Fire Code provides that fires are not permitted in public parks except as allowed by SDMC section 63.0102(c)(11).",
   "SDMC 511.0307(c)": "The current San Diego Fire Code prohibits open burning, recreational fires, and portable outdoor fireplace fires during a Red Flag Warning or Fire Weather Watch, subject to the specified beach-area exception.",
+  "SDMC 63.20.16(a)": "Fishing pier regulations prohibit unauthorized vehicles on fishing piers.",
+  "SDMC 63.20.16(b)": "Fishing pier regulations prohibit bicycles and skateboards on fishing piers.",
+  "SDMC 63.20.16(c)": "Fishing pier regulations prohibit diving or jumping from fishing piers.",
+  "SDMC 63.20.16(d)": "Fishing pier regulations prohibit swimming or surfing within 75 feet of a fishing pier.",
+  "SDMC 63.20.16(e)": "Fishing pier regulations prohibit climbing on pier railings.",
+  "SDMC 63.20.16(f)": "Fishing pier regulations prohibit casting in a manner that endangers other persons.",
+  "SDMC 63.20.16(g)": "Fishing pier regulations restrict fish cleaning to designated areas or methods.",
+  "SDMC 63.20.16(h)": "Fishing pier regulations prohibit littering.",
+  "SDMC 63.20.16(i)": "Fishing pier regulations prohibit using more than one fishing line.",
+  "SDMC 63.20.16(j)": "Fishing pier regulations prohibit animals on fishing piers except as otherwise authorized by law.",
+  "SDMC 63.20.16(k)": "Fishing pier regulations prohibit surf casting within 200 feet of a fishing pier.",
+  "SDMC 63.20.16(l)": "Fishing pier regulations prohibit commercial fishing from fishing piers.",
+  "SDMC 63.20.16(m)": "Fishing pier regulations prohibit spear guns.",
+  "SDMC 63.20.16(n)": "Fishing pier regulations restrict vessels from approaching within 100 feet of a fishing pier.",
+  "SDMC 63.20.16(o)": "Fishing pier regulations prohibit fires.",
+  "SDMC 63.20.16(p)": "Fishing pier regulations prohibit smoking or vaping.",
+  "SDMC 63.20.16(q)": "Fishing pier regulations prohibit unauthorized sales.",
+  "SDMC 63.20.7(a)": "Motor vehicles are generally prohibited on beaches, adjacent sidewalks, and turf except for authorized uses.",
+  "SDMC 63.20.7(b)": "Authorized vehicles in these areas are limited to five miles per hour.",
+  "SDMC 63.20.10(a)": "Boat launch regulations prohibit blocking or obstructing designated launch areas.",
+  "SDMC 63.20.10(b)": "Vehicles may not be left unattended in designated boat launch areas.",
+  "SDMC 63.20.10(c)": "Repeated or extended use that obstructs the boat launch is prohibited; the code requires a verbal warning before a notice of violation is issued for this subsection.",
+  "SDMC 63.0404(c)(1)": "Camping or maintaining an encampment is prohibited within two blocks of a school, subject to the ordinance location requirements.",
+  "SDMC 63.0404(c)(2)": "Camping or maintaining an encampment is prohibited within two blocks of a shelter, subject to the ordinance location requirements.",
+  "SDMC 63.0404(c)(4)": "Camping or maintaining an encampment is prohibited at specified transit hubs, trolley platforms, and tracks when required signs are posted.",
+  "SDMC 63.0503(a)": "Expressive activity must remain within the footprint allowed by the ordinance.",
+  "SDMC 63.0503(b)": "The ordinance restricts displaying merchandise directly on the ground or on public structures.",
+  "SDMC 63.0503(c)": "Expressive activity may not obstruct pedestrian or emergency access or reduce usable sidewalk width below the required minimum.",
+  "SDMC 63.0503(d)": "Expressive activity equipment may not be attached to public infrastructure.",
+  "SDMC 63.0503(e)": "Expressive activity remains subject to applicable sound limits.",
+  "SDMC 63.0504(a)": "In designated expressive activity areas, tables, easels, chairs, umbrellas, and similar equipment must remain within the designated area.",
+  "SDMC 63.0504(b)": "Vending is prohibited within designated expressive activity areas.",
+  "SDMC 63.0504(c)": "Expressive activity spaces may not be bought, sold, held, or reserved.",
+  "SDMC 63.0506(a)": "The ordinance provides a $100 administrative citation for a first violation.",
+  "SDMC 63.0506(b)": "The ordinance provides a $200 administrative citation for a second violation within one year.",
+  "SDMC 63.0506(c)": "The ordinance provides a $500 administrative citation for a third or subsequent violation within one year.",
+  "SDMC 511.0304": "The current fire code prohibits dumping or depositing waste in Wildland-Urban Interface areas and along associated trails, roads, highways, or structures.",
+  "SDMC 511.0503": "During Red Flag Warnings or Fire Weather Watches, parking may be prohibited in signed high-fire-risk areas when necessary to preserve access and evacuation routes.",
+  "SDMC 59.5.0402": "This section regulates excessive noise from motor vehicles operating off public streets. Technical noise measurement standards apply.",
 };
 
 const INFO: Array<[string, string]> = [
@@ -564,6 +643,27 @@ const LOCAL_SOURCE_URLS: Record<string, string> = {
   "63.20.3": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5063",
   "63.03": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5052",
   "511.0307": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=2932"
+  "63.20.16": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5076",
+  "63.20.7": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5067",
+  "63.20.10": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5070",
+  "63.0503": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5192",
+  "63.0504": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5193",
+  "63.0506": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=5195",
+  "511.0304": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=2921",
+  "511.0503": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=2940",
+  "59.5.0402": "https://online.encodeplus.com/regs/sandiego-ca/doc-viewer.aspx?secid=2820",
+};
+
+const ENFORCEMENT_NOTES: Record<string, string> = {
+  "63.20.10(c)": "A verbal warning is required before issuing a notice of violation for this subsection.",
+  "63.0404(c)(1)": "Enforceable regardless of shelter availability under SDMC 63.0405(c).",
+  "63.0404(c)(2)": "Enforceable regardless of shelter availability under SDMC 63.0405(c).",
+  "63.0404(c)(4)": "Enforceable regardless of shelter availability under SDMC 63.0405(c). Posted-sign conditions may apply.",
+  "63.0506(a)": "Administrative citation schedule: first violation is $100.",
+  "63.0506(b)": "Administrative citation schedule: second violation within one year is $200.",
+  "63.0506(c)": "Administrative citation schedule: third or subsequent violation within one year is $500.",
+  "511.0503": "Applies only in signed high-fire-risk areas during a Red Flag Warning or Fire Weather Watch when parking restrictions are in effect.",
+  "59.5.0402": "Reference-only: enforcement depends on applicable noise measurement standards and procedures."
 };
 
 const STATE_LAW_CODES: Record<string, string> = {
@@ -727,6 +827,11 @@ function runTests() {
   console.assert(dateKey(calculateAppearance("2026-04-24T10:00").adjusted) === "2026-06-22", "Court-date adjustment failed");
   console.assert(filterCitations("MISCELLANEOUS PORT DISTRICT", "all", "all", false, []).length === 0, "Port District entry present");
   console.assert(filterCitations("NUDITY ON BEACH", "all", "all", false, []).length === 0, "Coronado MC entry present");
+  console.assert(filterCitations("63.20.16", "all", "M", false, []).length >= 10, "Fishing pier entries missing");
+  console.assert(filterCitations("63.20.10(c)", "all", "U", false, []).length > 0, "Boat launch entry missing");
+  console.assert(ENFORCEMENT_NOTES["63.20.10(c)"].includes("verbal warning"), "Boat launch warning note missing");
+  console.assert(filterCitations("63.0504", "all", "U", false, []).length > 0, "Expressive activity entries missing");
+  console.assert(filterCitations("511.0503", "all", "U", false, []).length > 0, "Red Flag parking entry missing");
 }
 runTests();
 
@@ -820,6 +925,13 @@ function CitationDetails({ item, onClose }: { item: Citation; onClose: () => voi
             Close
           </button>
         </div>
+
+        {ENFORCEMENT_NOTES[item.section] && (
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <h3 className="font-semibold text-amber-900">Enforcement note</h3>
+            <p className="mt-2 text-amber-900">{ENFORCEMENT_NOTES[item.section]}</p>
+          </div>
+        )}
 
         <div className="mt-4 rounded-xl bg-slate-50 p-4">
           <h3 className="font-semibold">Full text</h3>

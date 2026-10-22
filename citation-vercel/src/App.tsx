@@ -835,8 +835,12 @@ function runTests() {
 runTests();
 
 function Badge({ level, children }: { level?: Level; children: React.ReactNode }) {
-  const className = level ? LEVEL_CLASS[level] : "bg-slate-100 text-slate-800";
-  return <span className={`rounded-xl px-2 py-1 text-xs font-semibold ${className}`}>{children}</span>;
+  const className = level ? LEVEL_CLASS[level] : "bg-slate-100 text-slate-700 ring-slate-200";
+  return (
+    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset ${className}`}>
+      {children}
+    </span>
+  );
 }
 
 function TabButton({ active, children, onClick }: { active: boolean; children: React.ReactNode; onClick: () => void }) {
@@ -845,8 +849,8 @@ function TabButton({ active, children, onClick }: { active: boolean; children: R
       type="button"
       onClick={onClick}
       className={active
-        ? "rounded-xl bg-slate-900 px-4 py-2 text-white"
-        : "rounded-xl border bg-white px-4 py-2 text-slate-700"}
+        ? "rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition"
+        : "rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"}
     >
       {children}
     </button>
@@ -865,24 +869,24 @@ function CitationCard({
   onFavorite: () => void;
 }) {
   return (
-    <article className="rounded-2xl bg-white p-4 shadow-sm">
+    <article className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left">
           <div className="mb-2 flex flex-wrap gap-2">
             <Badge>{item.category}</Badge>
             <Badge level={item.level}>{LEVEL_LABEL[item.level]}</Badge>
           </div>
-          <h2 className="text-xl font-semibold hover:underline">{item.title}</h2>
-          <p className="mt-1 font-mono text-lg text-slate-700">
+          <h2 className="text-lg font-semibold tracking-tight text-slate-900 group-hover:text-slate-700 sm:text-xl">{item.title}</h2>
+          <p className="mt-1 font-mono text-sm font-semibold text-slate-500 sm:text-base">
             {item.section} {item.code} [{item.level}]
           </p>
         </button>
 
         <div className="grid grid-cols-2 gap-2 md:flex">
-          <button type="button" onClick={onFavorite} className="h-11 rounded-xl border bg-white px-4">
+          <button type="button" onClick={onFavorite} className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
             {saved ? "Unsave" : "Save"}
           </button>
-          <button type="button" onClick={onSelect} className="h-11 rounded-xl bg-slate-900 px-4 text-white">
+          <button type="button" onClick={onSelect} className="h-10 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
             Details
           </button>
         </div>
@@ -974,7 +978,7 @@ function RadioCodesReference() {
 
   return (
     <section className="space-y-4">
-      <div className="rounded-2xl bg-white p-5 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-2xl font-bold">San Diego Radio Codes</h2>
         <p className="mt-2 text-slate-700">
           Quick-reference scanner terminology organized by type. Search a code such as 10-97, 11-99, Code 4, PC 415, or a plain-language meaning.
@@ -1007,7 +1011,7 @@ function RadioCodesReference() {
       </div>
 
       {[...grouped.entries()].map(([group, items]) => (
-        <section key={group} className="rounded-2xl bg-white p-5 shadow-sm">
+        <section key={group} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-3 flex items-end justify-between gap-4">
             <h3 className="text-xl font-bold">{group}</h3>
             <span className="text-sm text-slate-500">{items.length} entries</span>
@@ -1024,7 +1028,7 @@ function RadioCodesReference() {
       ))}
 
       {rows.length === 0 && (
-        <div className="rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm">
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
           No matching radio code found.
         </div>
       )}
@@ -1036,7 +1040,7 @@ function DateCalculator({ issuedAt, onChange }: { issuedAt: string; onChange: (v
   const result = useMemo(() => calculateAppearance(issuedAt), [issuedAt]);
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-sm">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h2 className="text-2xl font-bold">Citation Date Calculator</h2>
       <p className="mt-2 text-slate-700">
         Appearance date is set 8 weeks from issuance and moved to the next listed court day when it falls on a weekend or court holiday.
@@ -1126,15 +1130,24 @@ export default function EnforcementCitationLookup() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="sticky top-0 z-20 border-b bg-white p-4 shadow-sm">
-        <div className="mx-auto max-w-6xl space-y-4">
-          <div>
-            <h1 className="text-2xl font-bold">Enforcement Citation Lookup</h1>
-            <p className="text-slate-600">Fast CVC, PC, HSC, BPC, SDMC, CCR, SDCC, UFC, and TOW lookup.</p>
+    <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white text-slate-900">
+      <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur">
+        <div className="mx-auto max-w-7xl space-y-4 px-4 py-4 sm:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Field Reference</p>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Enforcement Citation Lookup</h1>
+              <p className="mt-1 max-w-3xl text-sm text-slate-600 sm:text-base">
+                Fast reference for common enforcement codes, radio codes, and appearance-date calculations.
+              </p>
+            </div>
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Field reference
+            </div>
           </div>
 
-          <nav className="grid grid-cols-5 gap-2">
+          <nav className="flex gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 p-1.5">
             <TabButton active={page === "lookup"} onClick={() => setPage("lookup")}>Lookup</TabButton>
             <TabButton active={page === "radio"} onClick={() => setPage("radio")}>Radio</TabButton>
             <TabButton active={page === "date"} onClick={() => setPage("date")}>Date</TabButton>
@@ -1145,28 +1158,28 @@ export default function EnforcementCitationLookup() {
           </nav>
 
           {(page === "lookup" || page === "favorites") && (
-            <div className="grid gap-3 md:grid-cols-4">
+            <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 md:grid-cols-4">
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search code, section, or violation"
-                className="h-11 rounded-xl border bg-white px-3 md:col-span-2"
+                placeholder="Search code, section, or violation..."
+                className="h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 md:col-span-2"
               />
 
-              <select value={category} onChange={(event) => setCategory(event.target.value)} className="h-11 rounded-xl border bg-white px-3">
+              <select value={category} onChange={(event) => setCategory(event.target.value)} className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200">
                 {CATEGORIES.map((value) => (
                   <option key={value} value={value}>{value === "all" ? "All categories" : value}</option>
                 ))}
               </select>
 
-              <select value={level} onChange={(event) => setLevel(event.target.value)} className="h-11 rounded-xl border bg-white px-3">
+              <select value={level} onChange={(event) => setLevel(event.target.value)} className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200">
                 <option value="all">All levels</option>
                 {(Object.keys(LEVEL_LABEL) as Level[]).map((value) => (
                   <option key={value} value={value}>{LEVEL_LABEL[value]}</option>
                 ))}
               </select>
 
-              <button type="button" onClick={resetFilters} className="h-11 rounded-xl border bg-white px-4 md:col-span-4">
+              <button type="button" onClick={resetFilters} className="h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-100 md:col-span-4">
                 Clear
               </button>
             </div>
@@ -1174,13 +1187,13 @@ export default function EnforcementCitationLookup() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl space-y-4 p-4 pb-24">
+      <main className="mx-auto max-w-7xl space-y-5 px-4 py-5 pb-24 sm:px-6">
         {page === "radio" && <RadioCodesReference />}
 
         {page === "date" && <DateCalculator issuedAt={issuedAt} onChange={setIssuedAt} />}
 
         {page === "info" && INFO.map(([title, body]) => (
-          <section key={title} className="rounded-2xl bg-white p-5 shadow-sm">
+          <section key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-semibold">{title}</h2>
             <p className="mt-2 text-slate-700">{body}</p>
           </section>
@@ -1188,9 +1201,20 @@ export default function EnforcementCitationLookup() {
 
         {(page === "lookup" || page === "favorites") && (
           <>
-            <div className="rounded-2xl bg-white p-4 shadow-sm">
-              <p className="font-medium">{shown.length} of {CITATIONS.length} shown</p>
-              <p className="mt-1 text-sm text-slate-600">Click a violation to view details.</p>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                {page === "favorites" ? "Saved reference" : "Citation library"}
+              </p>
+              <h2 className="mt-1 text-xl font-bold tracking-tight">
+                {page === "favorites" ? "Favorites" : "Browse citations"}
+              </h2>
+            </div>
+            <div className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">{shown.length} results</p>
+                <p className="mt-0.5 text-xs text-slate-500">{CITATIONS.length} total citations in the reference.</p>
+              </div>
+              <p className="text-xs font-medium text-slate-500">Select a violation to view details</p>
             </div>
 
             {selected && <CitationDetails item={selected} onClose={() => setSelected(null)} />}
@@ -1206,7 +1230,7 @@ export default function EnforcementCitationLookup() {
             ))}
 
             {shown.length === 0 && (
-              <div className="rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
                 No matching citation found.
               </div>
             )}

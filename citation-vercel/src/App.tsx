@@ -1536,9 +1536,6 @@ function BeatFinder() {
               Treat this as a likely beat for field reference. Confirm with current CAD/dispatch or departmental mapping when the exact beat is operationally important, especially near a boundary.
             </div>
 
-            <p className="text-xs text-slate-500">
-              Boundary source: City of San Diego Police Beats GIS and current beat-code list. The Vercel API asks the City's GIS service which polygon contains the location, avoiding client-side projection and CORS problems.
-            </p>
           </div>
         </div>
       )}

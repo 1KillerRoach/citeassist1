@@ -1537,7 +1537,7 @@ function BeatFinder() {
             </div>
 
             <p className="text-xs text-slate-500">
-              Boundary source: City of San Diego Open Data Police Beats dataset. Requests are routed through this site's Vercel API to avoid mobile-browser cross-origin errors.
+              Boundary source: City of San Diego Police Beats GIS and current beat-code list. The Vercel API asks the City's GIS service which polygon contains the location, avoiding client-side projection and CORS problems.
             </p>
           </div>
         </div>

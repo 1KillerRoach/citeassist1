@@ -1,75 +1,104 @@
-import { feature as topojsonFeature } from "topojson-client";
+const BEAT_QUERY_URL =
+  "https://webmaps.sandiego.gov/arcgis/rest/services/Hosted/LAW_SDPD_BEATS/FeatureServer/0/query";
 
-const BEAT_TOPOJSON_URL =
-  "https://seshat.datasd.org/gis_police_beats/pd_beats_datasd.topo.json";
+const BEAT_CODE_URL =
+  "https://seshat.datasd.org/gis_police_beats/pd_beat_codes_list_datasd.csv";
 
-let featureCache: any[] | null = null;
+type BeatLookupRow = {
+  beat: string;
+  neighborhood: string;
+};
 
-function pointInRing(point: [number, number], ring: number[][]): boolean {
-  const [x, y] = point;
-  let inside = false;
+let beatCodeCache: BeatLookupRow[] | null = null;
 
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    const intersects =
-      yi > y !== yj > y &&
-      x < ((xj - xi) * (y - yi)) / ((yj - yi) || Number.EPSILON) + xi;
+function parseCsvLine(line: string): string[] {
+  const values: string[] = [];
+  let current = "";
+  let quoted = false;
 
-    if (intersects) inside = !inside;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      if (quoted && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (char === "," && !quoted) {
+      values.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
   }
 
-  return inside;
+  values.push(current.trim());
+  return values;
 }
 
-function pointInPolygon(point: [number, number], coordinates: number[][][]): boolean {
-  if (!coordinates.length || !pointInRing(point, coordinates[0])) return false;
-  return !coordinates.slice(1).some((hole) => pointInRing(point, hole));
-}
+async function loadBeatCodes(): Promise<BeatLookupRow[]> {
+  if (beatCodeCache) return beatCodeCache;
 
-function containsPoint(candidate: any, point: [number, number]): boolean {
-  const geometry = candidate?.geometry;
-  if (!geometry) return false;
-
-  if (geometry.type === "Polygon") {
-    return pointInPolygon(point, geometry.coordinates);
-  }
-
-  if (geometry.type === "MultiPolygon") {
-    return geometry.coordinates.some((polygon: number[][][]) =>
-      pointInPolygon(point, polygon)
-    );
-  }
-
-  return false;
-}
-
-async function loadFeatures(): Promise<any[]> {
-  if (featureCache) return featureCache;
-
-  const response = await fetch(BEAT_TOPOJSON_URL, {
+  const response = await fetch(BEAT_CODE_URL, {
     headers: { "User-Agent": "citeassist-beat-finder/1.0" }
   });
 
   if (!response.ok) {
-    throw new Error(`City beat data returned ${response.status}`);
+    throw new Error(`Beat code list returned ${response.status}`);
   }
 
-  const topology: any = await response.json();
-  const objectKey = Object.keys(topology.objects || {})[0];
+  const csv = await response.text();
+  const lines = csv.split(/\r?\n/).filter(Boolean);
 
-  if (!objectKey) throw new Error("City beat boundary data is unavailable.");
+  if (lines.length < 2) {
+    throw new Error("Beat code list is empty.");
+  }
 
-  const converted: any = topojsonFeature(
-    topology as any,
-    topology.objects[objectKey] as any
+  const headers = parseCsvLine(lines[0]).map((value) => value.toLowerCase());
+  const beatIndex = headers.findIndex((value) => value === "beat");
+  const neighborhoodIndex = headers.findIndex((value) =>
+    ["neighborhood", "name", "beat_name"].includes(value)
   );
 
-  const features: any[] =
-    converted.type === "FeatureCollection" ? converted.features : [converted];
+  if (beatIndex < 0 || neighborhoodIndex < 0) {
+    throw new Error("Beat code list format has changed.");
+  }
 
-  featureCache = features;
-  return features;
+  const rows = lines.slice(1).map((line) => {
+    const columns = parseCsvLine(line);
+    return {
+      beat: String(columns[beatIndex] || "").trim(),
+      neighborhood: String(columns[neighborhoodIndex] || "").trim()
+    };
+  }).filter((row) => row.beat && row.neighborhood);
+
+  beatCodeCache = rows;
+  return rows;
+}
+
+function normalize(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+async function lookupBeatNumber(neighborhood: string): Promise<string> {
+  const rows = await loadBeatCodes();
+  const target = normalize(neighborhood);
+
+  const exact = rows.find((row) => normalize(row.neighborhood) === target);
+  if (exact) return exact.beat;
+
+  const partial = rows.find((row) => {
+    const candidate = normalize(row.neighborhood);
+    return candidate.includes(target) || target.includes(candidate);
+  });
+
+  return partial?.beat || "";
 }
 
 export default async function handler(req: any, res: any) {
@@ -91,19 +120,72 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  try {
-    const features = await loadFeatures();
-    const match = features.find((candidate) =>
-      containsPoint(candidate, [lon, lat])
-    );
+  const geometry = JSON.stringify({
+    x: lon,
+    y: lat,
+    spatialReference: { wkid: 4326 }
+  });
 
-    if (!match) {
+  const params = new URLSearchParams({
+    f: "json",
+    geometry,
+    geometryType: "esriGeometryPoint",
+    inSR: "4326",
+    spatialRel: "esriSpatialRelIntersects",
+    outFields: "name",
+    returnGeometry: "false"
+  });
+
+  try {
+    const response = await fetch(`${BEAT_QUERY_URL}?${params.toString()}`, {
+      headers: { "User-Agent": "citeassist-beat-finder/1.0" }
+    });
+
+    if (!response.ok) {
+      throw new Error(`City GIS returned ${response.status}`);
+    }
+
+    const data: any = await response.json();
+
+    if (data?.error) {
+      throw new Error(data.error.message || "City GIS query failed.");
+    }
+
+    const feature = data?.features?.[0];
+
+    if (!feature?.attributes?.name) {
       res.status(200).json({ properties: null });
       return;
     }
 
+    const neighborhood = String(feature.attributes.name).trim();
+    const beat = await lookupBeatNumber(neighborhood);
+
+    if (!beat) {
+      res.status(200).json({
+        properties: {
+          beat: "Unknown",
+          name: neighborhood,
+          serv: "",
+          div: ""
+        },
+        warning: "Neighborhood was located, but its beat number could not be matched."
+      });
+      return;
+    }
+
+    const div = beat.slice(0, 1);
+    const serv = beat.length >= 2 ? `${beat.slice(0, 2)}0` : "";
+
     res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
-    res.status(200).json({ properties: match.properties || null });
+    res.status(200).json({
+      properties: {
+        beat,
+        name: neighborhood,
+        serv,
+        div
+      }
+    });
   } catch (error) {
     res.status(502).json({
       error: error instanceof Error

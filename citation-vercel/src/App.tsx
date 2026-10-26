@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { feature as topojsonFeature } from "topojson-client";
 
-type Page = "lookup" | "radio" | "beat" | "date" | "favorites" | "info";
+type Page = "lookup" | "radio" | "alphabet" | "subject" | "beat" | "date" | "favorites" | "info";
 type Level = "I" | "M" | "F" | "TOW" | "U" | "I/M" | "I/J";
 
 type Citation = {
@@ -12,6 +12,35 @@ type Citation = {
   title: string;
 };
 
+
+const SDPD_PHONETIC_ALPHABET: Array<[string, string]> = [
+  ["A", "Adam"],
+  ["B", "Boy"],
+  ["C", "Charles"],
+  ["D", "David"],
+  ["E", "Edward"],
+  ["F", "Frank"],
+  ["G", "George"],
+  ["H", "Henry"],
+  ["I", "Ida"],
+  ["J", "John"],
+  ["K", "King"],
+  ["L", "Lincoln"],
+  ["M", "Mary"],
+  ["N", "Nora"],
+  ["O", "Ocean"],
+  ["P", "Paul"],
+  ["Q", "Queen"],
+  ["R", "Robert"],
+  ["S", "Sam"],
+  ["T", "Tom"],
+  ["U", "Union"],
+  ["V", "Victor"],
+  ["W", "William"],
+  ["X", "X-Ray"],
+  ["Y", "Young"],
+  ["Z", "Zebra"]
+];
 
 type BeatProperties = {
   beat?: number | string;
@@ -1163,6 +1192,228 @@ function CitationDetails({ item, onClose }: { item: Citation; onClose: () => voi
 }
 
 
+function SubjectIdentificationReference() {
+  const [notes, setNotes] = useState({
+    location: "",
+    age: "",
+    height: "",
+    build: "",
+    hair: "",
+    facialHair: "",
+    top: "",
+    bottom: "",
+    shoes: "",
+    distinguishing: "",
+    carried: "",
+    actions: "",
+    direction: ""
+  });
+
+  const update = (field: keyof typeof notes, value: string) =>
+    setNotes((current) => ({ ...current, [field]: value }));
+
+  const parts = [
+    notes.age && `${notes.age}`,
+    notes.height && `${notes.height}`,
+    notes.build && `${notes.build} build`,
+    notes.hair && `${notes.hair} hair`,
+    notes.facialHair && notes.facialHair,
+    notes.top && `top: ${notes.top}`,
+    notes.bottom && `bottom: ${notes.bottom}`,
+    notes.shoes && `shoes: ${notes.shoes}`,
+    notes.distinguishing && `distinguishing: ${notes.distinguishing}`,
+    notes.carried && `carrying: ${notes.carried}`,
+    notes.actions && `last seen: ${notes.actions}`,
+    notes.direction && `direction: ${notes.direction}`,
+    notes.location && `location: ${notes.location}`
+  ].filter(Boolean);
+
+  const broadcast = parts.join(", ");
+
+  const fields: Array<[keyof typeof notes, string, string]> = [
+    ["location", "Location / time", "Trail, lot, landmark, time"],
+    ["age", "Approx. age", "Example: 30s"],
+    ["height", "Approx. height", "Example: 5'10"],
+    ["build", "Build", "Slim, medium, stocky, athletic"],
+    ["hair", "Hair", "Color, length, style"],
+    ["facialHair", "Facial hair", "Beard, mustache, clean-shaven"],
+    ["top", "Upper clothing", "Color + garment + markings"],
+    ["bottom", "Lower clothing", "Color + garment"],
+    ["shoes", "Shoes", "Type and color"],
+    ["distinguishing", "Distinctive features", "Tattoo location, scar, hat, glasses"],
+    ["carried", "Items carried", "Backpack, bag, bicycle, tools"],
+    ["actions", "Observed actions", "What you actually saw"],
+    ["direction", "Direction / travel", "Northbound, toward visitor center, on foot"]
+  ];
+
+  return (
+    <section className="space-y-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Field reference</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight">Quick Subject Identification</h2>
+        <p className="mt-2 max-w-3xl text-slate-600">
+          Build a fast, observable description from head to toe. Prioritize what another ranger or dispatcher could use to locate the same person.
+        </p>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="text-lg font-bold">30-second scan</h3>
+          <div className="mt-4 space-y-4 text-sm">
+            <div>
+              <p className="font-semibold text-slate-900">1. Where?</p>
+              <p className="mt-1 text-slate-600">Exact location, landmark, direction of travel, and mode of travel.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">2. Overall profile</p>
+              <p className="mt-1 text-slate-600">Approximate age, height, and build. Use estimates only when useful.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">3. Head</p>
+              <p className="mt-1 text-slate-600">Hair, facial hair, hat, glasses, or other clearly visible features.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">4. Clothing</p>
+              <p className="mt-1 text-slate-600">Start with color, then garment type, then logos or unusual markings.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">5. Distinguishing details</p>
+              <p className="mt-1 text-slate-600">Visible tattoos, scars, unique footwear, bags, equipment, bicycle, or other items.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">6. Actions</p>
+              <p className="mt-1 text-slate-600">Describe conduct you directly observed instead of conclusions about intent.</p>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            Avoid guessing ethnicity, nationality, religion, medical status, or other personal background. Record observable facts and follow agency policy for any required demographic fields.
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-bold">Description builder</h3>
+              <p className="mt-1 text-sm text-slate-500">Fill only what you know. Leave uncertain fields blank.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setNotes({
+                location: "", age: "", height: "", build: "", hair: "", facialHair: "",
+                top: "", bottom: "", shoes: "", distinguishing: "", carried: "", actions: "", direction: ""
+              })}
+              className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+            >
+              Clear
+            </button>
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {fields.map(([field, label, placeholder]) => (
+              <label key={field} className={field === "actions" || field === "location" ? "sm:col-span-2" : ""}>
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</span>
+                <input
+                  value={notes[field]}
+                  onChange={(event) => update(field, event.target.value)}
+                  placeholder={placeholder}
+                  className="mt-1.5 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-base shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                />
+              </label>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Quick broadcast</p>
+        <h3 className="mt-1 text-lg font-bold">Description summary</h3>
+        {broadcast ? (
+          <p className="mt-3 rounded-xl bg-slate-50 p-4 font-medium leading-relaxed text-slate-800">
+            {broadcast}
+          </p>
+        ) : (
+          <p className="mt-3 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+            Add details above to build a concise description.
+          </p>
+        )}
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="text-lg font-bold">What matters most</h3>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["Location", "Where the person is or was last seen."],
+            ["Clothing", "Colors and garment types are often the fastest identifiers."],
+            ["Direction", "Where they are going and whether they are walking, biking, or driving."],
+            ["Unique feature", "One memorable item or feature can separate similar descriptions."]
+          ].map(([title, body]) => (
+            <div key={title} className="rounded-xl bg-slate-50 p-4">
+              <p className="font-semibold text-slate-900">{title}</p>
+              <p className="mt-1 text-sm text-slate-600">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </section>
+  );
+}
+
+function AlphabetReference() {
+  const [alphabetQuery, setAlphabetQuery] = useState("");
+
+  const rows = useMemo(() => {
+    const q = alphabetQuery.trim().toLowerCase();
+    if (!q) return SDPD_PHONETIC_ALPHABET;
+    return SDPD_PHONETIC_ALPHABET.filter(([letter, word]) =>
+      `${letter} ${word}`.toLowerCase().includes(q)
+    );
+  }, [alphabetQuery]);
+
+  return (
+    <section className="space-y-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Radio reference</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight">Law Enforcement Phonetic Alphabet</h2>
+        <p className="mt-2 max-w-3xl text-slate-600">
+          Quick A–Z reference for the law-enforcement phonetic alphabet used in San Diego public-safety communications.
+        </p>
+
+        <input
+          value={alphabetQuery}
+          onChange={(event) => setAlphabetQuery(event.target.value)}
+          placeholder="Search letter or word..."
+          className="mt-4 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-base shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        {rows.map(([letter, word]) => (
+          <div
+            key={letter}
+            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+          >
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-black tracking-tight text-slate-900">{letter}</span>
+              <span className="text-base font-semibold text-slate-700">{word}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {rows.length === 0 && (
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
+          No matching letter or phonetic word found.
+        </div>
+      )}
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-sm">
+        This uses the traditional law-enforcement phonetic alphabet: Adam, Boy, Charles, David, Edward, Frank, George, Henry, Ida, John, King, Lincoln, Mary, Nora, Ocean, Paul, Queen, Robert, Sam, Tom, Union, Victor, William, X-Ray, Young, Zebra.
+      </div>
+    </section>
+  );
+}
+
 function BeatFinder() {
   const [address, setAddress] = useState("");
   const [result, setResult] = useState<BeatResult | null>(null);
@@ -1557,6 +1808,8 @@ export default function EnforcementCitationLookup() {
           <nav className="flex gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 p-1.5">
             <TabButton active={page === "lookup"} onClick={() => setPage("lookup")}>Lookup</TabButton>
             <TabButton active={page === "radio"} onClick={() => setPage("radio")}>Radio</TabButton>
+            <TabButton active={page === "alphabet"} onClick={() => setPage("alphabet")}>Alphabet</TabButton>
+            <TabButton active={page === "subject"} onClick={() => setPage("subject")}>Subject ID</TabButton>
             <TabButton active={page === "beat"} onClick={() => setPage("beat")}>Beat</TabButton>
             <TabButton active={page === "date"} onClick={() => setPage("date")}>Date</TabButton>
             <TabButton active={page === "favorites"} onClick={() => setPage("favorites")}>
@@ -1625,6 +1878,10 @@ export default function EnforcementCitationLookup() {
 
       <main className="mx-auto max-w-7xl space-y-5 px-4 py-5 pb-24 sm:px-6">
         {page === "radio" && <RadioCodesReference />}
+
+        {page === "alphabet" && <AlphabetReference />}
+
+        {page === "subject" && <SubjectIdentificationReference />}
 
         {page === "beat" && <BeatFinder />}
 

@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { feature as topojsonFeature } from "topojson-client";
 
 type Page = "lookup" | "radio" | "alphabet" | "subject" | "beat" | "date" | "favorites" | "info";
 type Level = "I" | "M" | "F" | "TOW" | "U" | "I/M" | "I/J";
@@ -62,120 +61,39 @@ type BeatResult = {
   geocodeScore?: number;
 };
 
-const BEAT_TOPOJSON_URL = "https://seshat.datasd.org/gis_police_beats/pd_beats_datasd.topo.json";
-const ARCGIS_GEOCODER = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-
-const DIVISION_NAMES: Record<string, string> = {
-  "1": "Northern",
-  "2": "Northeastern",
-  "3": "Eastern",
-  "4": "Southeastern",
-  "5": "Central",
-  "6": "Western",
-  "7": "Southern",
-  "8": "Mid-City",
-  "9": "Northwestern"
-};
-
-let beatFeaturesCache: any[] | null = null;
-
-function pointInRing(point: [number, number], ring: number[][]): boolean {
-  const [x, y] = point;
-  let inside = false;
-
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    const intersects =
-      yi > y !== yj > y &&
-      x < ((xj - xi) * (y - yi)) / ((yj - yi) || Number.EPSILON) + xi;
-    if (intersects) inside = !inside;
-  }
-
-  return inside;
-}
-
-function pointInPolygon(point: [number, number], coordinates: number[][][]): boolean {
-  if (!coordinates.length || !pointInRing(point, coordinates[0])) return false;
-  return !coordinates.slice(1).some((hole) => pointInRing(point, hole));
-}
-
-function featureContainsPoint(feature: any, point: [number, number]): boolean {
-  const geometry = feature?.geometry;
-  if (!geometry) return false;
-
-  if (geometry.type === "Polygon") {
-    return pointInPolygon(point, geometry.coordinates);
-  }
-
-  if (geometry.type === "MultiPolygon") {
-    return geometry.coordinates.some((polygon: number[][][]) => pointInPolygon(point, polygon));
-  }
-
-  return false;
-}
-
-async function loadBeatFeatures(): Promise<any[]> {
-  if (beatFeaturesCache) return beatFeaturesCache;
-
-  const response = await fetch(BEAT_TOPOJSON_URL);
-  if (!response.ok) throw new Error("Unable to load the City police beat boundaries.");
-
-  const topology = await response.json();
-  const objectKey = Object.keys(topology.objects || {})[0];
-  if (!objectKey) throw new Error("Police beat boundary data is unavailable.");
-
-  const converted: any = topojsonFeature(topology, topology.objects[objectKey]);
-  const features: any[] = converted.type === "FeatureCollection" ? converted.features : [converted];
-  beatFeaturesCache = features;
-  return features;
-}
-
 async function findBeatAtPoint(lat: number, lon: number): Promise<BeatProperties | null> {
-  const features = await loadBeatFeatures();
-  const match = features.find((candidate) => featureContainsPoint(candidate, [lon, lat]));
-  return match?.properties || null;
+  const params = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  const response = await fetch(`/api/beat?${params.toString()}`);
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data?.error || "Unable to check the police beat.");
+  }
+
+  const data = await response.json();
+  return data?.properties || null;
 }
 
 async function geocodeAddress(address: string): Promise<{ lat: number; lon: number; address: string; score: number }> {
-  const query = address.toLowerCase().includes("san diego") ? address : `${address}, San Diego, CA`;
-  const params = new URLSearchParams({
-    f: "json",
-    singleLine: query,
-    outFields: "Match_addr,City,Subregion,Region,Postal",
-    maxLocations: "1",
-    searchExtent: "-117.35,32.50,-116.80,33.20"
-  });
+  const params = new URLSearchParams({ address });
+  const response = await fetch(`/api/geocode?${params.toString()}`);
 
-  const response = await fetch(`${ARCGIS_GEOCODER}/findAddressCandidates?${params.toString()}`);
-  if (!response.ok) throw new Error("Address lookup failed.");
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data?.error || "Address lookup failed.");
+  }
 
-  const data = await response.json();
-  const candidate = data?.candidates?.[0];
-  if (!candidate?.location) throw new Error("No matching San Diego address was found.");
-
-  return {
-    lat: candidate.location.y,
-    lon: candidate.location.x,
-    address: candidate.address || query,
-    score: Number(candidate.score || 0)
-  };
+  return response.json();
 }
 
 async function reverseGeocode(lat: number, lon: number): Promise<string> {
-  const params = new URLSearchParams({
-    f: "json",
-    location: `${lon},${lat}`
-  });
+  const params = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  const response = await fetch(`/api/reverse-geocode?${params.toString()}`);
 
-  try {
-    const response = await fetch(`${ARCGIS_GEOCODER}/reverseGeocode?${params.toString()}`);
-    if (!response.ok) return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-    const data = await response.json();
-    return data?.address?.Match_addr || data?.address?.LongLabel || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-  } catch {
-    return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-  }
+  if (!response.ok) return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+
+  const data = await response.json();
+  return data?.address || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
 }
 
 function normalizeBeatResult(
@@ -1514,7 +1432,7 @@ function BeatFinder() {
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Location tool</p>
             <h2 className="mt-1 text-2xl font-bold tracking-tight">Likely SDPD Beat</h2>
             <p className="mt-2 max-w-3xl text-slate-600">
-              Enter a San Diego address or use your phone location. The point is checked against the City's current SDPD police-beat GIS boundaries.
+              Enter a San Diego address or use your phone location. The point is checked against the City's current SDPD police-beat GIS boundaries through this site's server.
             </p>
           </div>
           <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
@@ -1607,7 +1525,7 @@ function BeatFinder() {
             </div>
 
             <p className="text-xs text-slate-500">
-              Boundary source: City of San Diego Open Data Police Beats dataset. The app loads the current published boundary file instead of relying on the older 2005 map.
+              Boundary source: City of San Diego Open Data Police Beats dataset. Requests are routed through this site's Vercel API to avoid mobile-browser cross-origin errors.
             </p>
           </div>
         </div>

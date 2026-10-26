@@ -61,6 +61,18 @@ type BeatResult = {
   geocodeScore?: number;
 };
 
+const DIVISION_NAMES: Record<string, string> = {
+  "1": "Northern",
+  "2": "Northeastern",
+  "3": "Eastern",
+  "4": "Southeastern",
+  "5": "Central",
+  "6": "Western",
+  "7": "Southern",
+  "8": "Mid-City",
+  "9": "Northwestern"
+};
+
 async function findBeatAtPoint(lat: number, lon: number): Promise<BeatProperties | null> {
   const params = new URLSearchParams({ lat: String(lat), lon: String(lon) });
   const response = await fetch(`/api/beat?${params.toString()}`);

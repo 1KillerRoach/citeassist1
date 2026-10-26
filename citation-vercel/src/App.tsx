@@ -126,8 +126,9 @@ async function loadBeatFeatures(): Promise<any[]> {
   if (!objectKey) throw new Error("Police beat boundary data is unavailable.");
 
   const converted: any = topojsonFeature(topology, topology.objects[objectKey]);
-  beatFeaturesCache = converted.type === "FeatureCollection" ? converted.features : [converted];
-  return beatFeaturesCache;
+  const features: any[] = converted.type === "FeatureCollection" ? converted.features : [converted];
+  beatFeaturesCache = features;
+  return features;
 }
 
 async function findBeatAtPoint(lat: number, lon: number): Promise<BeatProperties | null> {

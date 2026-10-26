@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
+import { feature as topojsonFeature } from "topojson-client";
 
-type Page = "lookup" | "radio" | "date" | "favorites" | "info";
+type Page = "lookup" | "radio" | "beat" | "date" | "favorites" | "info";
 type Level = "I" | "M" | "F" | "TOW" | "U" | "I/M" | "I/J";
 
 type Citation = {
@@ -11,8 +12,165 @@ type Citation = {
   title: string;
 };
 
+
+type BeatProperties = {
+  beat?: number | string;
+  div?: number | string;
+  serv?: number | string;
+  name?: string;
+  neighborhood?: string;
+};
+
+type BeatResult = {
+  beat: string;
+  neighborhood: string;
+  serviceArea: string;
+  division: string;
+  address: string;
+  lat: number;
+  lon: number;
+  accuracy?: number;
+  geocodeScore?: number;
+};
+
+const BEAT_TOPOJSON_URL = "https://seshat.datasd.org/gis_police_beats/pd_beats_datasd.topo.json";
+const ARCGIS_GEOCODER = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+
+const DIVISION_NAMES: Record<string, string> = {
+  "1": "Northern",
+  "2": "Northeastern",
+  "3": "Eastern",
+  "4": "Southeastern",
+  "5": "Central",
+  "6": "Western",
+  "7": "Southern",
+  "8": "Mid-City",
+  "9": "Northwestern"
+};
+
+let beatFeaturesCache: any[] | null = null;
+
+function pointInRing(point: [number, number], ring: number[][]): boolean {
+  const [x, y] = point;
+  let inside = false;
+
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    const intersects =
+      yi > y !== yj > y &&
+      x < ((xj - xi) * (y - yi)) / ((yj - yi) || Number.EPSILON) + xi;
+    if (intersects) inside = !inside;
+  }
+
+  return inside;
+}
+
+function pointInPolygon(point: [number, number], coordinates: number[][][]): boolean {
+  if (!coordinates.length || !pointInRing(point, coordinates[0])) return false;
+  return !coordinates.slice(1).some((hole) => pointInRing(point, hole));
+}
+
+function featureContainsPoint(feature: any, point: [number, number]): boolean {
+  const geometry = feature?.geometry;
+  if (!geometry) return false;
+
+  if (geometry.type === "Polygon") {
+    return pointInPolygon(point, geometry.coordinates);
+  }
+
+  if (geometry.type === "MultiPolygon") {
+    return geometry.coordinates.some((polygon: number[][][]) => pointInPolygon(point, polygon));
+  }
+
+  return false;
+}
+
+async function loadBeatFeatures(): Promise<any[]> {
+  if (beatFeaturesCache) return beatFeaturesCache;
+
+  const response = await fetch(BEAT_TOPOJSON_URL);
+  if (!response.ok) throw new Error("Unable to load the City police beat boundaries.");
+
+  const topology = await response.json();
+  const objectKey = Object.keys(topology.objects || {})[0];
+  if (!objectKey) throw new Error("Police beat boundary data is unavailable.");
+
+  const converted: any = topojsonFeature(topology, topology.objects[objectKey]);
+  beatFeaturesCache = converted.type === "FeatureCollection" ? converted.features : [converted];
+  return beatFeaturesCache;
+}
+
+async function findBeatAtPoint(lat: number, lon: number): Promise<BeatProperties | null> {
+  const features = await loadBeatFeatures();
+  const match = features.find((candidate) => featureContainsPoint(candidate, [lon, lat]));
+  return match?.properties || null;
+}
+
+async function geocodeAddress(address: string): Promise<{ lat: number; lon: number; address: string; score: number }> {
+  const query = address.toLowerCase().includes("san diego") ? address : `${address}, San Diego, CA`;
+  const params = new URLSearchParams({
+    f: "json",
+    singleLine: query,
+    outFields: "Match_addr,City,Subregion,Region,Postal",
+    maxLocations: "1",
+    searchExtent: "-117.35,32.50,-116.80,33.20"
+  });
+
+  const response = await fetch(`${ARCGIS_GEOCODER}/findAddressCandidates?${params.toString()}`);
+  if (!response.ok) throw new Error("Address lookup failed.");
+
+  const data = await response.json();
+  const candidate = data?.candidates?.[0];
+  if (!candidate?.location) throw new Error("No matching San Diego address was found.");
+
+  return {
+    lat: candidate.location.y,
+    lon: candidate.location.x,
+    address: candidate.address || query,
+    score: Number(candidate.score || 0)
+  };
+}
+
+async function reverseGeocode(lat: number, lon: number): Promise<string> {
+  const params = new URLSearchParams({
+    f: "json",
+    location: `${lon},${lat}`
+  });
+
+  try {
+    const response = await fetch(`${ARCGIS_GEOCODER}/reverseGeocode?${params.toString()}`);
+    if (!response.ok) return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+    const data = await response.json();
+    return data?.address?.Match_addr || data?.address?.LongLabel || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  } catch {
+    return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  }
+}
+
+function normalizeBeatResult(
+  properties: BeatProperties,
+  location: { lat: number; lon: number; address: string; accuracy?: number; geocodeScore?: number }
+): BeatResult {
+  const beat = String(properties.beat ?? "").trim();
+  const divisionNumber = String(properties.div ?? "").trim();
+  const serviceArea = String(properties.serv ?? (beat ? beat.slice(0, 2) + "0" : "")).trim();
+
+  return {
+    beat: beat || "Unknown",
+    neighborhood: String(properties.name ?? properties.neighborhood ?? "Unknown"),
+    serviceArea: serviceArea || "Unknown",
+    division: DIVISION_NAMES[divisionNumber] || (divisionNumber ? `Division ${divisionNumber}` : "Unknown"),
+    address: location.address,
+    lat: location.lat,
+    lon: location.lon,
+    accuracy: location.accuracy,
+    geocodeScore: location.geocodeScore
+  };
+}
+
 type RadioCode = {
-  group: "10-Codes" | "11-Codes" | "SDPD Codes" | "Disposition" | "Sheriff Terms" | "Stations" | "Scanner Statutes";
+  group: "10-Codes" | "11-Codes" | "SDPD Codes" | "Disposition" | "Sheriff Terms" | "Stations" | "Scanner Statutes" | "Unit Designators" | "Call Sign Guide";
   code: string;
   meaning: string;
 };
@@ -90,11 +248,57 @@ const RADIO_CODES: RadioCode[] = [
   ["Scanner Statutes","CVC 22450","Failure to stop at stop sign"],["Scanner Statutes","CVC 22500","Illegal parking"],
   ["Scanner Statutes","CVC 23103","Reckless driving"],["Scanner Statutes","CVC 23152","Driving under the influence"],
   ["Scanner Statutes","H&S 11350","Possession of a controlled narcotic"],["Scanner Statutes","H&S 11377","Possession of a controlled substance"],
-  ["Scanner Statutes","W&I 5150","Danger to self or others (mental health hold reference)"]
+  ["Scanner Statutes","W&I 5150","Danger to self or others (mental health hold reference)"],
+
+  ["Unit Designators","C","Captain"],
+  ["Unit Designators","L","Lieutenant"],
+  ["Unit Designators","S","Patrol Sergeant"],
+  ["Unit Designators","D","Detective"],
+  ["Unit Designators","A","Alpha / overtime officer; handles calls for service"],
+  ["Unit Designators","B","One-officer extra unit, first and third watch"],
+  ["Unit Designators","BK","Bike unit"],
+  ["Unit Designators","E","Juvenile Services Team or Traffic Grant Detail enforcement unit"],
+  ["Unit Designators","F","Special Events Traffic Controller"],
+  ["Unit Designators","G","Officer with trainee, first and third watch"],
+  ["Unit Designators","GS","Gang Suppression Team"],
+  ["Unit Designators","H","Patrol trainee, observation phase"],
+  ["Unit Designators","I","Impound / Abatement unit"],
+  ["Unit Designators","J","One-officer unit, first and third watch"],
+  ["Unit Designators","K","Two-officer unit, first and third watch"],
+  ["Unit Designators","M","Traffic Motor unit"],
+  ["Unit Designators","N","Canine unit"],
+  ["Unit Designators","O","Indochinese Service Officer (ISO)"],
+  ["Unit Designators","P","Parking Enforcement unit"],
+  ["Unit Designators","PG","PISO trainee, first and third watch"],
+  ["Unit Designators","PU","PISO trainee, second watch"],
+  ["Unit Designators","PT","PERT officer with clinician"],
+  ["Unit Designators","Q","Special detail unit"],
+  ["Unit Designators","RO","Police Investigative Service Officer (PISO)"],
+  ["Unit Designators","RS","Retired Senior Volunteer Patrol traffic unit"],
+  ["Unit Designators","RSV","Retired Senior Volunteer Patrol"],
+  ["Unit Designators","T","Traffic unit"],
+  ["Unit Designators","U","Officer with trainee, second watch"],
+  ["Unit Designators","V","One-officer extra unit, second watch"],
+  ["Unit Designators","W","Two-officer extra unit, second watch"],
+  ["Unit Designators","WK","Walking unit"],
+  ["Unit Designators","X","Two-officer extra unit, first and third watch"],
+  ["Unit Designators","Y","One-officer unit, second watch"],
+  ["Unit Designators","Z","Two-officer unit, second watch"],
+
+  ["Call Sign Guide","831J1","8 = Mid-City area command; 3 = service area; 1 = primary beat officer; J = one-officer unit; 1 = first watch"],
+  ["Call Sign Guide","50s","Juvenile services teams, power squads, C squads, or established special details"],
+  ["Call Sign Guide","60s","Special details"],
+  ["Call Sign Guide","70s","Special details"],
+  ["Call Sign Guide","80s","Special details"],
+  ["Call Sign Guide","90s","Area command narcotic units"],
+  ["Call Sign Guide","88 / 99","Designators ending in 88 or 99 are not used because they can be misheard as emergency codes"],
+  ["Call Sign Guide","L1-L5","Field lieutenants / watch commander identifiers"],
+  ["Call Sign Guide","RSV + beat","Retired Senior Volunteer Patrol units use the beat number in the call sign"]
 ].map(([group, code, meaning]) => ({ group: group as RadioCode["group"], code, meaning }));
 
 const RADIO_GROUPS: Array<"All" | RadioCode["group"]> = [
-  "All", "10-Codes", "11-Codes", "SDPD Codes", "Disposition", "Sheriff Terms", "Stations", "Scanner Statutes"
+  "All", "10-Codes", "11-Codes", "SDPD Codes", "Unit Designators", "Call Sign Guide",
+  "Disposition", "Sheriff Terms", "Stations", "Scanner Statutes"
 ];
 
 type AppearanceResult = {
@@ -958,6 +1162,208 @@ function CitationDetails({ item, onClose }: { item: Citation; onClose: () => voi
   );
 }
 
+
+function BeatFinder() {
+  const [address, setAddress] = useState("");
+  const [result, setResult] = useState<BeatResult | null>(null);
+  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const resolvePoint = async (
+    lat: number,
+    lon: number,
+    matchedAddress: string,
+    accuracy?: number,
+    geocodeScore?: number
+  ) => {
+    const properties = await findBeatAtPoint(lat, lon);
+
+    if (!properties) {
+      setResult(null);
+      setStatus("This point did not fall inside a City of San Diego SDPD beat boundary.");
+      return;
+    }
+
+    setResult(normalizeBeatResult(properties, {
+      lat,
+      lon,
+      address: matchedAddress,
+      accuracy,
+      geocodeScore
+    }));
+    setStatus("");
+  };
+
+  const searchAddress = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const trimmed = address.trim();
+
+    if (!trimmed) {
+      setStatus("Enter an address or intersection.");
+      setResult(null);
+      return;
+    }
+
+    setLoading(true);
+    setStatus("Locating address and checking the current beat boundary...");
+
+    try {
+      const location = await geocodeAddress(trimmed);
+      await resolvePoint(location.lat, location.lon, location.address, undefined, location.score);
+    } catch (error) {
+      setResult(null);
+      setStatus(error instanceof Error ? error.message : "Unable to determine the beat.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setStatus("This browser does not support location services.");
+      return;
+    }
+
+    setLoading(true);
+    setResult(null);
+    setStatus("Requesting your location...");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude, accuracy } = position.coords;
+          setStatus("Checking the current beat boundary...");
+          const matchedAddress = await reverseGeocode(latitude, longitude);
+          setAddress(matchedAddress);
+          await resolvePoint(latitude, longitude, matchedAddress, accuracy);
+        } catch (error) {
+          setStatus(error instanceof Error ? error.message : "Unable to determine the beat.");
+        } finally {
+          setLoading(false);
+        }
+      },
+      (error) => {
+        setLoading(false);
+        setStatus(
+          error.code === error.PERMISSION_DENIED
+            ? "Location permission was denied. Enter an address instead."
+            : "Your location could not be determined. Enter an address instead."
+        );
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+    );
+  };
+
+  return (
+    <section className="space-y-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Location tool</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight">Likely SDPD Beat</h2>
+            <p className="mt-2 max-w-3xl text-slate-600">
+              Enter a San Diego address or use your phone location. The point is checked against the City's current SDPD police-beat GIS boundaries.
+            </p>
+          </div>
+          <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+            Current GIS
+          </span>
+        </div>
+
+        <form onSubmit={searchAddress} className="mt-5 space-y-3">
+          <label className="block">
+            <span className="text-sm font-semibold text-slate-700">Address or intersection</span>
+            <input
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              placeholder="Example: 1 Father Junipero Serra Trail"
+              className="mt-2 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-base shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            />
+          </label>
+
+          <div className="grid gap-2 sm:grid-cols-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="h-12 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Checking..." : "Find beat"}
+            </button>
+            <button
+              type="button"
+              onClick={useCurrentLocation}
+              disabled={loading}
+              className="h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Use my location
+            </button>
+          </div>
+        </form>
+
+        {status && (
+          <p className="mt-4 rounded-xl bg-slate-50 p-3 text-sm text-slate-600" aria-live="polite">
+            {status}
+          </p>
+        )}
+      </div>
+
+      {result && (
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 bg-slate-900 p-5 text-white">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Likely police beat</p>
+            <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-1">
+              <span className="text-4xl font-bold tracking-tight">{result.beat}</span>
+              <span className="pb-1 text-lg text-slate-200">{result.neighborhood}</span>
+            </div>
+          </div>
+
+          <div className="grid gap-px bg-slate-200 sm:grid-cols-2">
+            <div className="bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Service area</p>
+              <p className="mt-1 text-lg font-semibold">{result.serviceArea}</p>
+            </div>
+            <div className="bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Division</p>
+              <p className="mt-1 text-lg font-semibold">{result.division}</p>
+            </div>
+          </div>
+
+          <div className="space-y-3 p-5">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Matched location</p>
+              <p className="mt-1 font-medium text-slate-800">{result.address}</p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 text-xs text-slate-500">
+              {typeof result.accuracy === "number" && (
+                <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                  Phone accuracy ±{Math.round(result.accuracy)} m
+                </span>
+              )}
+              {typeof result.geocodeScore === "number" && (
+                <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                  Address match {Math.round(result.geocodeScore)}%
+                </span>
+              )}
+              <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                {result.lat.toFixed(5)}, {result.lon.toFixed(5)}
+              </span>
+            </div>
+
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              Treat this as a likely beat for field reference. Confirm with current CAD/dispatch or departmental mapping when the exact beat is operationally important, especially near a boundary.
+            </div>
+
+            <p className="text-xs text-slate-500">
+              Boundary source: City of San Diego Open Data Police Beats dataset. The app loads the current published boundary file instead of relying on the older 2005 map.
+            </p>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function RadioCodesReference() {
   const [radioQuery, setRadioQuery] = useState("");
   const [radioGroup, setRadioGroup] = useState<(typeof RADIO_GROUPS)[number]>("All");
@@ -981,7 +1387,7 @@ function RadioCodesReference() {
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-2xl font-bold">San Diego Radio Codes</h2>
         <p className="mt-2 text-slate-700">
-          Quick-reference scanner terminology organized by type. Search a code such as 10-97, 11-99, Code 4, PC 415, or a plain-language meaning.
+          Quick-reference scanner terminology and SDPD unit designators organized by type. Search a code such as 10-97, 11-99, Code 4, 831J1, J, PT, or a plain-language meaning.
         </p>
         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
           Scanner reference only. Radio terminology varies by agency and changes over time. The statute section is shorthand from the source list, not a substitute for the Citation Lookup or current official law.
@@ -1151,6 +1557,7 @@ export default function EnforcementCitationLookup() {
           <nav className="flex gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 p-1.5">
             <TabButton active={page === "lookup"} onClick={() => setPage("lookup")}>Lookup</TabButton>
             <TabButton active={page === "radio"} onClick={() => setPage("radio")}>Radio</TabButton>
+            <TabButton active={page === "beat"} onClick={() => setPage("beat")}>Beat</TabButton>
             <TabButton active={page === "date"} onClick={() => setPage("date")}>Date</TabButton>
             <TabButton active={page === "favorites"} onClick={() => setPage("favorites")}>
               Favorites{favorites.length ? ` ${favorites.length}` : ""}
@@ -1218,6 +1625,8 @@ export default function EnforcementCitationLookup() {
 
       <main className="mx-auto max-w-7xl space-y-5 px-4 py-5 pb-24 sm:px-6">
         {page === "radio" && <RadioCodesReference />}
+
+        {page === "beat" && <BeatFinder />}
 
         {page === "date" && <DateCalculator issuedAt={issuedAt} onChange={setIssuedAt} />}
 

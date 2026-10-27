@@ -61,6 +61,15 @@ type BeatResult = {
   geocodeScore?: number;
 };
 
+type LocationContext = {
+  nearestAddress: string;
+  nearestIntersection: string;
+  lat: number;
+  lon: number;
+  accuracy?: number;
+  geocodeScore?: number;
+};
+
 const DIVISION_NAMES: Record<string, string> = {
   "1": "Northern",
   "2": "Northeastern",
@@ -98,14 +107,22 @@ async function geocodeAddress(address: string): Promise<{ lat: number; lon: numb
   return response.json();
 }
 
-async function reverseGeocode(lat: number, lon: number): Promise<string> {
+async function getLocationContext(lat: number, lon: number): Promise<{ nearestAddress: string; nearestIntersection: string }> {
   const params = new URLSearchParams({ lat: String(lat), lon: String(lon) });
-  const response = await fetch(`/api/reverse-geocode?${params.toString()}`);
+  const response = await fetch(`/api/location-context?${params.toString()}`);
 
-  if (!response.ok) return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  if (!response.ok) {
+    return {
+      nearestAddress: `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+      nearestIntersection: "Unavailable"
+    };
+  }
 
   const data = await response.json();
-  return data?.address || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  return {
+    nearestAddress: data?.nearestAddress || `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+    nearestIntersection: data?.nearestIntersection || "No nearby intersection found"
+  };
 }
 
 function normalizeBeatResult(
@@ -1348,6 +1365,7 @@ function AlphabetReference() {
 function BeatFinder() {
   const [address, setAddress] = useState("");
   const [result, setResult] = useState<BeatResult | null>(null);
+  const [locationContext, setLocationContext] = useState<LocationContext | null>(null);
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -1358,18 +1376,32 @@ function BeatFinder() {
     accuracy?: number,
     geocodeScore?: number
   ) => {
-    const properties = await findBeatAtPoint(lat, lon);
+    const [properties, context] = await Promise.all([
+      findBeatAtPoint(lat, lon),
+      getLocationContext(lat, lon)
+    ]);
+
+    const nearestAddress = context.nearestAddress || matchedAddress;
+
+    setLocationContext({
+      nearestAddress,
+      nearestIntersection: context.nearestIntersection,
+      lat,
+      lon,
+      accuracy,
+      geocodeScore
+    });
 
     if (!properties) {
       setResult(null);
-      setStatus("This point did not fall inside a City of San Diego SDPD beat boundary.");
+      setStatus("No SDPD beat was found for this point. Location details are shown below.");
       return;
     }
 
     setResult(normalizeBeatResult(properties, {
       lat,
       lon,
-      address: matchedAddress,
+      address: nearestAddress,
       accuracy,
       geocodeScore
     }));
@@ -1383,6 +1415,7 @@ function BeatFinder() {
     if (!trimmed) {
       setStatus("Enter an address or intersection.");
       setResult(null);
+      setLocationContext(null);
       return;
     }
 
@@ -1394,6 +1427,7 @@ function BeatFinder() {
       await resolvePoint(location.lat, location.lon, location.address, undefined, location.score);
     } catch (error) {
       setResult(null);
+      setLocationContext(null);
       setStatus(error instanceof Error ? error.message : "Unable to determine the beat.");
     } finally {
       setLoading(false);
@@ -1408,17 +1442,19 @@ function BeatFinder() {
 
     setLoading(true);
     setResult(null);
+    setLocationContext(null);
     setStatus("Requesting your location...");
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
           const { latitude, longitude, accuracy } = position.coords;
-          setStatus("Checking the current beat boundary...");
-          const matchedAddress = await reverseGeocode(latitude, longitude);
-          setAddress(matchedAddress);
-          await resolvePoint(latitude, longitude, matchedAddress, accuracy);
+          setStatus("Checking location and current beat boundary...");
+          const context = await getLocationContext(latitude, longitude);
+          setAddress(context.nearestAddress);
+          await resolvePoint(latitude, longitude, context.nearestAddress, accuracy);
         } catch (error) {
+          setLocationContext(null);
           setStatus(error instanceof Error ? error.message : "Unable to determine the beat.");
         } finally {
           setLoading(false);
@@ -1489,6 +1525,37 @@ function BeatFinder() {
         )}
       </div>
 
+      {locationContext && (
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Location reference</p>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Nearest address</p>
+              <p className="mt-1 text-lg font-semibold text-slate-900">{locationContext.nearestAddress}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Nearest intersection</p>
+              <p className="mt-1 text-lg font-semibold text-slate-900">{locationContext.nearestIntersection}</p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-500">
+            {typeof locationContext.accuracy === "number" && (
+              <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                Phone accuracy ±{Math.round(locationContext.accuracy)} m
+              </span>
+            )}
+            {typeof locationContext.geocodeScore === "number" && (
+              <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                Address match {Math.round(locationContext.geocodeScore)}%
+              </span>
+            )}
+            <span className="rounded-full bg-slate-100 px-2.5 py-1">
+              {locationContext.lat.toFixed(5)}, {locationContext.lon.toFixed(5)}
+            </span>
+          </div>
+        </div>
+      )}
+
       {result && (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-200 bg-slate-900 p-5 text-white">
@@ -1511,27 +1578,6 @@ function BeatFinder() {
           </div>
 
           <div className="space-y-3 p-5">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Matched location</p>
-              <p className="mt-1 font-medium text-slate-800">{result.address}</p>
-            </div>
-
-            <div className="flex flex-wrap gap-2 text-xs text-slate-500">
-              {typeof result.accuracy === "number" && (
-                <span className="rounded-full bg-slate-100 px-2.5 py-1">
-                  Phone accuracy ±{Math.round(result.accuracy)} m
-                </span>
-              )}
-              {typeof result.geocodeScore === "number" && (
-                <span className="rounded-full bg-slate-100 px-2.5 py-1">
-                  Address match {Math.round(result.geocodeScore)}%
-                </span>
-              )}
-              <span className="rounded-full bg-slate-100 px-2.5 py-1">
-                {result.lat.toFixed(5)}, {result.lon.toFixed(5)}
-              </span>
-            </div>
-
             <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
               Treat this as a likely beat for field reference. Confirm with current CAD/dispatch or departmental mapping when the exact beat is operationally important, especially near a boundary.
             </div>

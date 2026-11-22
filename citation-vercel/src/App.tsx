@@ -1978,8 +1978,10 @@ export default function EnforcementCitationLookup() {
               <div>
                 <h3 className="font-semibold text-slate-900">What it covers</h3>
                 <p className="mt-1">
-                  The reference includes selected California and local enforcement entries, including CVC, PC, HSC, BPC,
-                  SDMC, CCR, SDCC, UFC, and towing-related material. It also provides regional radio terminology,
+                  The citation reference includes selected provisions from the California Vehicle Code (CVC), Penal Code (PC),
+                  Health and Safety Code (HSC), Business and Professions Code (BPC), California Code of Regulations (CCR),
+                  San Diego Municipal Code (SDMC), San Diego County Code (SDCC), and applicable fire regulations.
+                  It also includes vehicle towing and impoundment references. It also provides regional radio terminology,
                   a phonetic alphabet, a likely-beat lookup, a subject-description builder, and an appearance-date calculator.
                   The Features section below explains each tool.
                 </p>

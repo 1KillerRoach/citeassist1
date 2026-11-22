@@ -147,7 +147,7 @@ function normalizeBeatResult(
 }
 
 type RadioCode = {
-  group: "10-Codes" | "11-Codes" | "SDPD Codes" | "Disposition" | "Sheriff Terms" | "Stations" | "Scanner Statutes" | "Unit Designators" | "Call Sign Guide";
+  group: "10-Codes" | "11-Codes" | "SDPD Codes" | "Disposition" | "Sheriff Terms" | "Stations" | "County Dept IDs" | "Scanner Statutes" | "Unit Designators" | "Call Sign Guide";
   code: string;
   meaning: string;
 };
@@ -216,6 +216,7 @@ const RADIO_CODES: RadioCode[] = [
   ["Scanner Statutes","PC 451","Arson"],["Scanner Statutes","PC 459","Burglary"],
   ["Scanner Statutes","PC 470","Forgery"],["Scanner Statutes","PC 487","Grand theft"],
   ["Scanner Statutes","PC 488","Petty theft"],["Scanner Statutes","PC 496","Possession of stolen property"],
+  ["Scanner Statutes","586","Illegal Parking (SDPD dispatch shorthand; use the applicable parking code for citation)"],
   ["Scanner Statutes","PC 594","Vandalism"],["Scanner Statutes","PC 597","Animal abuse"],
   ["Scanner Statutes","PC 602","Trespassing"],["Scanner Statutes","PC 647","Disorderly conduct"],
   ["Scanner Statutes","CVC 4000(a)","Unregistered vehicle"],["Scanner Statutes","CVC 10851","Stolen vehicle"],
@@ -271,11 +272,83 @@ const RADIO_CODES: RadioCode[] = [
   ["Call Sign Guide","88 / 99","Designators ending in 88 or 99 are not used because they can be misheard as emergency codes"],
   ["Call Sign Guide","L1-L5","Field lieutenants / watch commander identifiers"],
   ["Call Sign Guide","RSV + beat","Retired Senior Volunteer Patrol units use the beat number in the call sign"]
-].map(([group, code, meaning]) => ({ group: group as RadioCode["group"], code, meaning }));
+
+  ["Stations","Station M","San Diego County Sheriff"],
+  ["Stations","Station N","News Media / Stringer"],
+  ["Stations","Station O","Oceanside Police"],
+  ["Stations","Station Q","National City Police"],
+  ["Stations","Station R","San Diego County Search & Rescue"],
+  ["Stations","Station S","SDSU Police"],
+  ["Stations","Station X","County Communications Center / County Lifeguards / County Probation"],
+  ["Stations","Station 1","La Mesa Police"],
+  ["Stations","Sheriff 10","SDSO Admin / Crime Lab"],
+  ["Stations","Sheriff 20","SDSO Encinitas"],
+  ["Stations","Sheriff 30","SDSO Vista"],
+  ["Stations","Sheriff 32","SDSO Fallbrook"],
+  ["Stations","Sheriff 40","SDSO Poway"],
+  ["Stations","Sheriff 50","SDSO Santee"],
+  ["Stations","Sheriff 52","SDSO Alpine"],
+  ["Stations","Sheriff 60","SDSO Lemon Grove"],
+  ["Stations","Sheriff 70","SDSO Imperial Beach"],
+  ["Stations","Sheriff 80","SDSO Rural"],
+  ["Stations","Sheriff 82","SDSO Borrego Springs"],
+  ["Stations","Sheriff 90","SDSO San Marcos"],
+  ["County Dept IDs","Alpha","Juvenile Hall Detention Facility"],
+  ["County Dept IDs","Bravo","Adult Supervision"],
+  ["County Dept IDs","Delta","General Services"],
+  ["County Dept IDs","Golf","Parks and Recreation"],
+  ["County Dept IDs","November","Agriculture"],
+  ["County Dept IDs","Omega","Medical Examiner"],
+  ["County Dept IDs","Probe","Probation Department"],
+  ["County Dept IDs","Radar","Radio Technicians"],
+  ["County Dept IDs","Rebel","Sanitation"],
+  ["County Dept IDs","Red Cross","Red Cross"],
+  ["County Dept IDs","Tango","Humane Society"],
+  ["County Dept IDs","Yankee","Office of Disaster Preparedness"],
+  ["Scanner Statutes","PC 146A","Impersonating an officer"],
+  ["Scanner Statutes","PC 220","Assault with intent to commit rape or robbery"],
+  ["Scanner Statutes","PC 241","Assault on peace officer"],
+  ["Scanner Statutes","PC 261","Rape"],
+  ["Scanner Statutes","PC 266","Pimping & pandering"],
+  ["Scanner Statutes","PC 271","Child abuse"],
+  ["Scanner Statutes","PC 272","Contributing to delinquency of minor"],
+  ["Scanner Statutes","PC 330","Illegal gambling"],
+  ["Scanner Statutes","PC 415 DV","Disturbing peace — domestic violence"],
+  ["Scanner Statutes","PC 503","Embezzlement"],
+  ["Scanner Statutes","PC 518","Extortion"],
+  ["Scanner Statutes","PC 537","Defraud innkeeper / taxi"],
+  ["Scanner Statutes","PC 586","Illegal parking (SDPD scanner shorthand)"],
+  ["Scanner Statutes","PC 602.5","Breaking and entering"],
+  ["Scanner Statutes","PC 647A","Lewd act in public"],
+  ["Scanner Statutes","PC 647B","Prostitution"],
+  ["Scanner Statutes","PC 647C","Begging"],
+  ["Scanner Statutes","PC 647D","Lewd act in public toilet"],
+  ["Scanner Statutes","PC 647E","Loitering"],
+  ["Scanner Statutes","PC 647F","Drunk in public"],
+  ["Scanner Statutes","PC 647K","Peeping Tom"],
+  ["Scanner Statutes","PC 647I","Illegal lodging"],
+  ["Scanner Statutes","PC 653F","Soliciting to commit felony"],
+  ["Scanner Statutes","PC 653M","Making annoying phone calls"],
+  ["Scanner Statutes","PC 653X","911 abuse"],
+  ["Scanner Statutes","CVC 10852","Tampering with vehicle"],
+  ["Scanner Statutes","CVC 10853","Vandalizing vehicle"],
+  ["Scanner Statutes","H&S 11383","Manufacturing a controlled substance"],
+  ["Scanner Statutes","PC 12020","Possession of illegal weapon (legacy scanner reference)"],
+  ["Scanner Statutes","PC 12021","Felon possession of deadly weapon (legacy scanner reference)"],
+  ["Scanner Statutes","PC 12025","Carrying concealed weapon, no permit (legacy scanner reference)"],
+  ["Scanner Statutes","PC 12031","Loaded firearm in vehicle (legacy scanner reference)"],
+  ["Scanner Statutes","PC 12034","Shooting from vehicle (legacy scanner reference)"],
+  ["Scanner Statutes","PC 12220","Possession of illegal weapon (legacy scanner reference)"],
+  ["Scanner Statutes","PC 12276","Possession of assault weapon (legacy scanner reference)"],
+  ["Scanner Statutes","CVC 20003","Hit and run with injury or death"],
+  ["Scanner Statutes","CVC 22348","Speeding"],
+  ["Scanner Statutes","CVC 23110","Throwing object from vehicle"],
+  ["Scanner Statutes","CVC 23153","DUI collision causing injury"],
+  ["Scanner Statutes","CVC 23222","Open container alcohol in vehicle"],].map(([group, code, meaning]) => ({ group: group as RadioCode["group"], code, meaning }));
 
 const RADIO_GROUPS: Array<"All" | RadioCode["group"]> = [
   "All", "10-Codes", "11-Codes", "SDPD Codes", "Unit Designators", "Call Sign Guide",
-  "Disposition", "Sheriff Terms", "Stations", "Scanner Statutes"
+  "Disposition", "Sheriff Terms", "Stations", "County Dept IDs", "Scanner Statutes"
 ];
 
 type AppearanceResult = {
@@ -1615,7 +1688,7 @@ function RadioCodesReference() {
           Quick-reference scanner terminology and SDPD unit designators organized by type. Search a code such as 10-97, 11-99, Code 4, 831J1, J, PT, or a plain-language meaning.
         </p>
         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-          Scanner reference only. Radio terminology varies by agency and changes over time. The statute section is shorthand from the source list, not a substitute for the Citation Lookup or current official law.
+          Scanner reference only. Radio terminology varies by agency and changes over time. Scanner Statutes reproduces shorthand from the ScanSanDiego reference list, including legacy section numbers; use Citation Lookup or current official law for enforcement.
         </div>
 
         <input
@@ -1886,6 +1959,22 @@ export default function EnforcementCitationLookup() {
               <p className="text-xs font-medium text-slate-500">Select a violation to view details</p>
             </div>
 
+            {page === "lookup" && query.trim().toLowerCase().replace(/\s+/g, "") === "586" && (
+              <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-950">
+                <p className="font-semibold">SDPD radio code 586 — Illegal Parking</p>
+                <p className="mt-1">
+                  This is SDPD dispatch/radio shorthand, not a citation section. Use the applicable CVC or SDMC parking section for enforcement.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setPage("radio")}
+                  className="mt-3 h-10 rounded-xl border border-sky-300 bg-white px-4 font-semibold text-sky-900 transition hover:bg-sky-100"
+                >
+                  Open Radio reference
+                </button>
+              </div>
+            )}
+
             {selected && <CitationDetails item={selected} onClose={() => setSelected(null)} />}
 
             {shown.map((item) => (
@@ -1898,7 +1987,7 @@ export default function EnforcementCitationLookup() {
               />
             ))}
 
-            {shown.length === 0 && (
+            {shown.length === 0 && !(page === "lookup" && query.trim().toLowerCase().replace(/\s+/g, "") === "586") && (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
                 No matching citation found.
               </div>

@@ -866,7 +866,7 @@ const FULL_TEXT: Record<string, string> = {
 const INFO: Array<[string, string]> = [
   ["About", "Fast field reference for CVC, PC, HSC, BPC, SDMC, CCR, SDCC, UFC, and TOW entries."],
   ["Features", "Search by section, code, title, level, or category. Current SDMC park, waterway, encampment, water-safety, and fire-reference entries include links to the City's EncodePlus code portal. The date page calculates an appearance date 8 weeks out and moves it to the next court day when needed."],
-  ["Disclaimer", "For quick reference only. Verify current law, agency policy, court rules, and training before field use."]
+  ["Database review status", "Citation database: Last verified review not recorded. Radio database: Reference entries updated November 21, 2026; last verified review not recorded. An update date does not mean the information has been independently validated."]
 ];
 
 const LEVEL_LABEL: Record<Level, string> = {
@@ -1846,9 +1846,8 @@ export default function EnforcementCitationLookup() {
                 Fast reference for common enforcement codes, radio codes, and appearance-date calculations.
               </p>
             </div>
-            <div className="hidden w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 sm:inline-flex">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Field reference
+            <div className="w-fit shrink-0 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700">
+              Unofficial Reference
             </div>
           </div>
 
@@ -1934,6 +1933,23 @@ export default function EnforcementCitationLookup() {
 
         {page === "date" && <DateCalculator issuedAt={issuedAt} onChange={setIssuedAt} />}
 
+        {page === "info" && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" aria-labelledby="site-disclaimer-title">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Important notice</p>
+            <h2 id="site-disclaimer-title" className="mt-1 text-xl font-semibold">Disclaimer</h2>
+            <p className="mt-2 font-semibold text-slate-900">Unofficial Field Reference | Not for Official Reliance</p>
+            <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-700">
+              <p>This website is an independently developed reference tool intended to assist park rangers, public safety personnel, and other users with quick access to commonly referenced laws, regulations, radio codes, and field information.</p>
+              <p className="font-medium text-slate-900">This website is not an official City of San Diego, San Diego Police Department, San Diego County, or California government resource. It is not endorsed, sponsored, maintained, or approved by these agencies.</p>
+              <p>Information is provided for general reference and educational purposes. Laws, municipal codes, enforcement classifications, radio procedures, court schedules, and geographic boundaries are subject to change. Content might be incomplete, outdated, or inaccurate.</p>
+              <p>Users are responsible for verifying all information against current official sources, applicable agency policies, and established procedures before taking enforcement or operational action.</p>
+              <p>Beat Finder results, GPS locations, addresses, and intersections are estimates and should not replace official dispatch information or authorized geographic systems.</p>
+              <p className="font-medium text-slate-900">Use of this website does not establish legal authority, replace professional training, or substitute for independent judgment.</p>
+              <p>The developer makes no warranties regarding the accuracy, completeness, availability, or suitability of the information provided.</p>
+            </div>
+          </section>
+        )}
+
         {page === "info" && INFO.map(([title, body]) => (
           <section key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-semibold">{title}</h2>
@@ -1995,6 +2011,12 @@ export default function EnforcementCitationLookup() {
           </>
         )}
       </main>
+      <footer className="border-t border-slate-200 bg-white/80">
+        <div className="mx-auto max-w-7xl space-y-2 px-4 py-5 text-xs leading-relaxed text-slate-600 sm:px-6">
+          <p><strong className="text-slate-800">Unofficial Reference Tool.</strong> Not affiliated with or endorsed by the City of San Diego, SDPD, or any government agency. Information is provided for reference only and might be inaccurate or outdated. Verify all laws, codes, procedures, and location information with official sources before use. This tool does not replace agency policy, training, or professional judgment.</p>
+          <p><strong className="text-slate-700">Review status:</strong> Citations: review date not recorded. Radio: entries updated November 21, 2026; verification date not recorded. <button type="button" onClick={() => { setPage("info"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="ml-1 font-semibold text-slate-800 underline underline-offset-2 hover:text-slate-600">Read full disclaimer</button></p>
+        </div>
+      </footer>
     </div>
   );
 }

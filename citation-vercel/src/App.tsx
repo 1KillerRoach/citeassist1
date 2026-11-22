@@ -1688,7 +1688,7 @@ function RadioCodesReference() {
           Quick-reference scanner terminology and SDPD unit designators organized by type. Search a code such as 10-97, 11-99, Code 4, 831J1, J, PT, or a plain-language meaning.
         </p>
         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-          Scanner reference only. Radio terminology varies by agency and changes over time. Scanner Statutes reproduces shorthand from the ScanSanDiego reference list, including legacy section numbers; use Citation Lookup or current official law for enforcement.
+          Scanner reference only. Radio terminology varies by agency and changes over time. Scanner Statutes includes shorthand and legacy section numbers; use Citation Lookup or current official law for enforcement.
         </div>
 
         <input

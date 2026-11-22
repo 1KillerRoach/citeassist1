@@ -271,7 +271,7 @@ const RADIO_CODES: RadioCode[] = [
   ["Call Sign Guide","90s","Area command narcotic units"],
   ["Call Sign Guide","88 / 99","Designators ending in 88 or 99 are not used because they can be misheard as emergency codes"],
   ["Call Sign Guide","L1-L5","Field lieutenants / watch commander identifiers"],
-  ["Call Sign Guide","RSV + beat","Retired Senior Volunteer Patrol units use the beat number in the call sign"]
+  ["Call Sign Guide","RSV + beat","Retired Senior Volunteer Patrol units use the beat number in the call sign"],
 
   ["Stations","Station M","San Diego County Sheriff"],
   ["Stations","Station N","News Media / Stringer"],

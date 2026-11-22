@@ -863,10 +863,6 @@ const FULL_TEXT: Record<string, string> = {
   "SDMC 59.5.0402": "This section regulates excessive noise from motor vehicles operating off public streets. Technical noise measurement standards apply.",
 };
 
-const INFO: Array<[string, string]> = [
-  ["About", "Fast field reference for CVC, PC, HSC, BPC, SDMC, CCR, SDCC, UFC, and TOW entries."],
-];
-
 const SITE_FEATURES: Array<[string, string]> = [
   ["Citation Lookup", "Search violations by code, section, title, classification, or category. View details, enforcement notes, and official code links where available."],
   ["Filters and Favorites", "Narrow citations by category or offense level and mark frequently used entries for quick access during field work."],
@@ -1960,12 +1956,53 @@ export default function EnforcementCitationLookup() {
           </section>
         )}
 
-        {page === "info" && INFO.map(([title, body]) => (
-          <section key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold">{title}</h2>
-            <p className="mt-2 text-slate-700">{body}</p>
+        {page === "info" && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" aria-labelledby="site-about-title">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">About this project</p>
+            <h2 id="site-about-title" className="mt-1 text-xl font-semibold">About Citation Assist</h2>
+            <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-700">
+              <p>
+                Citation Assist is an independently developed, mobile-friendly field reference designed to help park rangers,
+                public safety personnel, and other field staff locate commonly used enforcement and communication information.
+                It brings several quick-reference tasks into one searchable interface, reducing the need to switch between
+                separate documents and websites while working in the field.
+              </p>
+              <div>
+                <h3 className="font-semibold text-slate-900">Why it was created</h3>
+                <p className="mt-1">
+                  Field work often requires looking up code sections, checking radio terminology, identifying a likely police beat,
+                  or organizing a clear subject description. Citation Assist was built to make those reference tasks easier to reach
+                  on a phone, especially when time and screen space are limited.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-900">What it covers</h3>
+                <p className="mt-1">
+                  The reference includes selected California and local enforcement entries, including CVC, PC, HSC, BPC,
+                  SDMC, CCR, SDCC, UFC, and towing-related material. It also provides regional radio terminology,
+                  a phonetic alphabet, a likely-beat lookup, a subject-description builder, and an appearance-date calculator.
+                  The Features section below explains each tool.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-900">How to use it</h3>
+                <p className="mt-1">
+                  Search by a known code or plain-language term, review the matching entry, and follow its official source link
+                  when available. Use the supporting tabs to find communication or location references. Treat results as a
+                  starting point for verification, not as an instruction to cite, detain, or take other enforcement action.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-900">Scope and ongoing improvement</h3>
+                <p className="mt-1">
+                  This is a curated reference rather than a complete catalog of every applicable law or agency procedure.
+                  Entries, classifications, links, and supporting datasets may need corrections or updates as official
+                  information changes. Coverage and functionality will evolve as the project is reviewed and improved.
+                </p>
+              </div>
+            </div>
           </section>
-        ))}
+        )}
 
         {page === "info" && (
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

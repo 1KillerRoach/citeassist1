@@ -865,8 +865,18 @@ const FULL_TEXT: Record<string, string> = {
 
 const INFO: Array<[string, string]> = [
   ["About", "Fast field reference for CVC, PC, HSC, BPC, SDMC, CCR, SDCC, UFC, and TOW entries."],
-  ["Features", "Search by section, code, title, level, or category. Current SDMC park, waterway, encampment, water-safety, and fire-reference entries include links to the City's EncodePlus code portal. The date page calculates an appearance date 8 weeks out and moves it to the next court day when needed."],
-  ["Database review status", "Citation database: Last verified review not recorded. Radio database: Reference entries updated November 21, 2026; last verified review not recorded. An update date does not mean the information has been independently validated."]
+];
+
+const SITE_FEATURES: Array<[string, string]> = [
+  ["Citation Lookup", "Search violations by code, section, title, classification, or category. View details, enforcement notes, and official code links where available."],
+  ["Filters and Favorites", "Narrow citations by category or offense level and mark frequently used entries for quick access during field work."],
+  ["Radio Reference", "Search SDPD and regional 10-codes, 11-codes, unit designators, call-sign guidance, station identifiers, dispositions, and scanner shorthand."],
+  ["Phonetic Alphabet", "Use a searchable A–Z law-enforcement phonetic alphabet for radio communications."],
+  ["Beat Finder", "Enter an address or use your phone location to identify a likely SDPD beat, division, and service area. View the nearest address and intersection even if no beat is found."],
+  ["Appearance Date Calculator", "Calculate an appearance date eight weeks after issuance, with adjustments for listed weekends and court holidays. Verify court instructions before use."],
+  ["Quick Subject ID", "Use a head-to-toe observation guide and description builder to organize observable details into a short field broadcast."],
+  ["Mobile-Friendly Access", "Use compact mobile search, collapsible filters, touch-friendly navigation, and readable reference cards on phones or desktop."],
+  ["Official References", "Open available California legislative and City of San Diego municipal-code source links to verify the current text."],
 ];
 
 const LEVEL_LABEL: Record<Level, string> = {
@@ -1957,6 +1967,21 @@ export default function EnforcementCitationLookup() {
           </section>
         ))}
 
+        {page === "info" && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-xl font-semibold">Features</h2>
+            <p className="mt-2 text-sm text-slate-600">Tools for quick access to citation, communication, and location references.</p>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+              {SITE_FEATURES.map(([name, description]) => (
+                <li key={name} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <h3 className="font-semibold text-slate-900">{name}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600">{description}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {(page === "lookup" || page === "favorites") && (
           <>
             <div>
@@ -2014,7 +2039,7 @@ export default function EnforcementCitationLookup() {
       <footer className="border-t border-slate-200 bg-white/80">
         <div className="mx-auto max-w-7xl space-y-2 px-4 py-5 text-xs leading-relaxed text-slate-600 sm:px-6">
           <p><strong className="text-slate-800">Unofficial Reference Tool.</strong> Not affiliated with or endorsed by the City of San Diego, SDPD, or any government agency. Information is provided for reference only and might be inaccurate or outdated. Verify all laws, codes, procedures, and location information with official sources before use. This tool does not replace agency policy, training, or professional judgment.</p>
-          <p><strong className="text-slate-700">Review status:</strong> Citations: review date not recorded. Radio: entries updated November 21, 2026; verification date not recorded. <button type="button" onClick={() => { setPage("info"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="ml-1 font-semibold text-slate-800 underline underline-offset-2 hover:text-slate-600">Read full disclaimer</button></p>
+          <p><button type="button" onClick={() => { setPage("info"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="font-semibold text-slate-800 underline underline-offset-2 hover:text-slate-600">Read full disclaimer</button></p>
         </div>
       </footer>
     </div>
